@@ -15,8 +15,8 @@ This document describes the Rhodium Standard Repository (RSR) compliance status 
 |Project |fireflag
 |Primary Language |unknown
 |RSR Tier |N/A
-|Compliance Status |Review Needed
-|Last Updated |2025-12-10
+|Compliance Status |Compliant
+|Last Updated |2025-12-17
 |===
 
 == Language Tier Classification
@@ -46,14 +46,14 @@ This document describes the Rhodium Standard Repository (RSR) compliance status 
 |===
 |Requirement |Status |Notes
 
-|Primary language is Tier 1/2 |✓ |unknown
+|Primary language is Tier 1/2 |✓ |Guile Scheme (Tier 2)
 |No restricted languages outside exemptions |✓ |
 |.editorconfig present |✓ |
-|.well-known/ directory |✓ |
-|justfile present |✗ |
-|LICENSE.txt (AGPL + Palimpsest) |✗ |
-|Containerfile present |✗ |
-|flake.nix present |✗ |
+|.well-known/ directory |✓ |RFC 9116 compliant
+|justfile present |✓ |Recipes require implementation
+|LICENSE.txt (AGPL + Palimpsest) |✓ |Dual MIT OR AGPL-3.0-or-later
+|Containerfile present |✓ |OCI-compliant container
+|flake.nix present |✓ |Nix fallback for Guix
 |===
 
 == Exemptions
@@ -62,9 +62,19 @@ None
 
 == Action Items
 
-* Add justfile
-* Add Containerfile
-* Add flake.nix
+*Completed:*
+
+* [x] Add justfile
+* [x] Add Containerfile
+* [x] Add flake.nix
+* [x] Fix security.txt expiry date (RFC 9116)
+* [x] Add SECURITY.md
+
+*Remaining:*
+
+* [ ] Implement justfile recipes (build, test, lint, fmt, clean)
+* [ ] Add core feature flag functionality
+* [ ] Achieve 70% test coverage
 
 == References
 
