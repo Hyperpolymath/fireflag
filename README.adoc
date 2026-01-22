@@ -43,7 +43,7 @@ fireflag aims to provide:
 * **Type-Safe SDK** - Built with ReScript for compile-time guarantees
 * **Edge-Ready** - Designed for distributed, low-latency evaluation
 * **Self-Hostable** - Full control over your feature flag infrastructure
-* **FOSS-First** - No vendor lock-in, dual-licensed MIT/AGPL-3.0
+* **FOSS-First** - No vendor lock-in, dual-licensed MIT/PMPL-1.0
 
 == Repository Infrastructure
 
@@ -172,7 +172,7 @@ just lint
 Dual-licensed under your choice of:
 
 * **Palimpsest-MPL-1.0 License** - Maximum flexibility for most uses
-* **AGPL-3.0-or-later** - Copyleft protection for network services
+* **PMPL-1.0-or-later** - Copyleft protection for network services
 
 Additionally encourages (non-binding) adherence to https://github.com/hyperpolymath/palimpsest-license[Palimpsest License] principles around consent-based digital interaction.
 
