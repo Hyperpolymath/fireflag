@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FireFlag DevTools</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <div class="devtools-panel">
+    <header class="panel-header">
+      <h1>🚩 FireFlag Inspector</h1>
+      <div class="panel-actions">
+        <button id="refresh-btn" class="tool-btn">↻ Refresh</button>
+        <button id="record-btn" class="tool-btn">⏺ Record Impact</button>
+        <button id="export-btn" class="tool-btn">💾 Export</button>
+      </div>
+    </header>
+
+    <div class="panel-tabs">
+      <button class="tab-btn active" data-tab="flags">Active Flags</button>
+      <button class="tab-btn" data-tab="performance">Performance</button>
+      <button class="tab-btn" data-tab="impact">Impact Analysis</button>
+      <button class="tab-btn" data-tab="console">Console Logs</button>
+    </div>
+
+    <!-- Active Flags Tab -->
+    <div class="tab-content active" id="tab-flags">
+      <div class="section-header">
+        <h2>Active Flags in This Tab</h2>
+        <span class="count-badge" id="flag-count">0</span>
+      </div>
+      <div class="flags-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Flag</th>
+              <th>Value</th>
+              <th>Safety</th>
+              <th>Modified</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="flags-tbody">
+            <tr>
+              <td colspan="5" class="empty-state">No modified flags detected</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Performance Tab -->
+    <div class="tab-content" id="tab-performance">
+      <div class="section-header">
+        <h2>Current Page Performance</h2>
+        <button id="collect-metrics-btn" class="secondary-btn">Collect Metrics</button>
+      </div>
+      <div class="metrics-grid" id="metrics-grid">
+        <div class="metric-card">
+          <span class="metric-label">DOM Content Loaded</span>
+          <span class="metric-value" id="metric-dcl">—</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Load Complete</span>
+          <span class="metric-value" id="metric-load">—</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">First Paint</span>
+          <span class="metric-value" id="metric-fp">—</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">First Contentful Paint</span>
+          <span class="metric-value" id="metric-fcp">—</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">JS Heap Size</span>
+          <span class="metric-value" id="metric-heap">—</span>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Memory Usage</span>
+          <span class="metric-value" id="metric-memory">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Impact Analysis Tab -->
+    <div class="tab-content" id="tab-impact">
+      <div class="section-header">
+        <h2>Flag Impact Analysis</h2>
+        <div class="recording-status" id="recording-status">
+          <span>⏸ Not Recording</span>
+        </div>
+      </div>
+      <div class="impact-instructions">
+        <h3>How to Record Impact:</h3>
+        <ol>
+          <li>Click "Record Impact" to start baseline measurement</li>
+          <li>Change a flag in the popup or sidebar</li>
+          <li>Reload the page to see the effect</li>
+          <li>Click "Record Impact" again to capture after-change metrics</li>
+          <li>View the performance difference below</li>
+        </ol>
+      </div>
+      <div class="impact-results" id="impact-results">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Console Logs Tab -->
+    <div class="tab-content" id="tab-console">
+      <div class="section-header">
+        <h2>FireFlag Console Logs</h2>
+        <button id="clear-console-btn" class="secondary-btn">Clear</button>
+      </div>
+      <div class="console-output" id="console-output">
+        <div class="console-message info">
+          <span class="timestamp">[00:00:00]</span>
+          <span class="message">FireFlag DevTools initialized</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="panel.js"></script>
+</body>
+</html>

@@ -55,6 +55,8 @@
     "browser_style": true
   },
 
+  "devtools_page": "devtools/devtools.html",
+
   "browser_specific_settings": {
     "gecko": {
       "id": "fireflag@hyperpolymath.org",

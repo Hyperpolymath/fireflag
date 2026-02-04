@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (C) 2026 Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>
+
+/**
+ * FireFlag DevTools Entry Point
+ *
+ * Creates the DevTools panel when DevTools is opened.
+ */
+
+browser.devtools.panels.create(
+  "FireFlag",
+  "../icons/fireflag-32.png",
+  "devtools/panel.html"
+).then((panel) => {
+  console.log("FireFlag DevTools panel created");
+}).catch((error) => {
+  console.error("Failed to create FireFlag DevTools panel:", error);
+});
