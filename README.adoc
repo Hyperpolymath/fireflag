@@ -1,10 +1,12 @@
-= fireflag
+= FireFlag
 
-image:https://img.shields.io/badge/License-PMPL--1.0-blue.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
-image:https://img.shields.io/badge/Philosophy-Palimpsest-indigo.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/License-PMPL--1.0-indigo.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/RSR-Certified-gold[RSR Certified,link=https://github.com/hyperpolymath/rhodium-standard-repositories]
+image:https://img.shields.io/badge/Status-Active%20Development-yellow[Status]
 
+**Safe Firefox/Gecko flag management for users and developers**
 
-Jonathan D.A. Jewell <jonathan.jewell@gmail.com>
+Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>
 :toc: macro
 :toclevels: 3
 :icons: font

@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/hyperpolymath/fireflag/schemas/flags-database",
+  "title": "FireFlag Database Schema",
+  "description": "Schema for Firefox/Gecko flag database with safety classifications",
+  "type": "object",
+  "required": ["version", "lastUpdated", "categories", "flags"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the database"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last database update"
+    },
+    "categories": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z][a-z0-9-]*$": {
+          "type": "object",
+          "required": ["name", "description"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Human-readable category name"
+            },
+            "description": {
+              "type": "string",
+              "description": "Category description"
+            }
+          }
+        }
+      }
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/flag"
+      }
+    }
+  },
+  "definitions": {
+    "flag": {
+      "type": "object",
+      "required": [
+        "key",
+        "type",
+        "category",
+        "safetyLevel",
+        "defaultValue",
+        "description",
+        "effects",
+        "permissions"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]*$",
+          "description": "Flag key (e.g., 'privacy.resistFingerprinting')"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["boolean", "string", "integer", "float"],
+          "description": "Flag value type"
+        },
+        "category": {
+          "type": "string",
+          "description": "Category key from categories object"
+        },
+        "safetyLevel": {
+          "type": "string",
+          "enum": ["safe", "experimental", "dangerous"],
+          "description": "Safety classification"
+        },
+        "defaultValue": {
+          "description": "Default value for this flag"
+        },
+        "description": {
+          "type": "string",
+          "description": "Human-readable flag description"
+        },
+        "effects": {
+          "type": "object",
+          "required": ["positive", "negative", "interesting"],
+          "properties": {
+            "positive": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Positive effects of enabling/changing this flag"
+            },
+            "negative": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Negative effects or risks"
+            },
+            "interesting": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Interesting technical details or side effects"
+            }
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "browserSettings",
+              "privacy",
+              "tabs",
+              "notifications",
+              "downloads"
+            ]
+          },
+          "description": "Firefox permissions required to modify this flag"
+        },
+        "geckoMinVersion": {
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d+)?$",
+          "description": "Minimum Gecko version supporting this flag"
+        },
+        "geckoMaxVersion": {
+          "type": "string",
+          "pattern": "^\\d+(\\.\\d+)?$",
+          "description": "Maximum Gecko version (if deprecated/removed)"
+        },
+        "documentation": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link to official documentation"
+        },
+        "bugNumber": {
+          "type": "integer",
+          "description": "Bugzilla bug number if applicable"
+        }
+      }
+    }
+  }
+}

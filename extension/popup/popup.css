@@ -1,0 +1,272 @@
+/* SPDX-License-Identifier: PMPL-1.0-or-later */
+
+:root {
+  --primary-color: #0060df;
+  --safe-color: #12bc00;
+  --experimental-color: #ff9400;
+  --dangerous-color: #d70022;
+  --bg-color: #f9f9fa;
+  --text-color: #0c0c0d;
+  --border-color: #d7d7db;
+  --hover-color: #ededf0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-size: 14px;
+  color: var(--text-color);
+  background: var(--bg-color);
+  width: 400px;
+  max-height: 600px;
+}
+
+.popup-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: white;
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+}
+
+.popup-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.quick-filters {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 6px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  background: var(--hover-color);
+}
+
+.filter-btn.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.search-box {
+  padding: 12px 16px;
+  background: white;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.flags-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.flag-item {
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.flag-item:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.flag-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.flag-key {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--text-color);
+}
+
+.safety-badge {
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.safety-badge.safe {
+  background: var(--safe-color);
+  color: white;
+}
+
+.safety-badge.experimental {
+  background: var(--experimental-color);
+  color: white;
+}
+
+.safety-badge.dangerous {
+  background: var(--dangerous-color);
+  color: white;
+}
+
+.flag-description {
+  font-size: 12px;
+  color: #737373;
+  margin-bottom: 8px;
+}
+
+.flag-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 40px;
+  height: 20px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 20px;
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+  background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(20px);
+}
+
+.permission-notice {
+  padding: 12px 16px;
+  background: #fff3cd;
+  border-top: 1px solid var(--border-color);
+}
+
+.notice-text {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.grant-permission-btn {
+  width: 100%;
+  padding: 8px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.grant-permission-btn:hover {
+  background: #0250bb;
+}
+
+.popup-footer {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: white;
+  border-top: 1px solid var(--border-color);
+}
+
+.footer-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.footer-btn:hover {
+  background: var(--hover-color);
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #737373;
+}

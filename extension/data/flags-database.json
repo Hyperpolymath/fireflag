@@ -1,0 +1,224 @@
+{
+  "$schema": "./flags-schema.json",
+  "version": "0.1.0",
+  "lastUpdated": "2026-02-04T10:30:00Z",
+  "categories": {
+    "privacy": {
+      "name": "Privacy & Security",
+      "description": "Flags that affect privacy, tracking, and security features"
+    },
+    "performance": {
+      "name": "Performance",
+      "description": "Flags that affect browser performance and resource usage"
+    },
+    "experimental": {
+      "name": "Experimental Features",
+      "description": "New features under development"
+    },
+    "developer": {
+      "name": "Developer Tools",
+      "description": "Flags for debugging and development"
+    },
+    "ui": {
+      "name": "User Interface",
+      "description": "Flags that change the browser UI"
+    },
+    "network": {
+      "name": "Network & Connectivity",
+      "description": "Flags affecting network behavior"
+    }
+  },
+  "flags": [
+    {
+      "key": "privacy.resistFingerprinting",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Enable fingerprinting resistance to make browser tracking harder",
+      "effects": {
+        "positive": [
+          "Reduces browser fingerprinting",
+          "Enhances privacy"
+        ],
+        "negative": [
+          "May break some websites that rely on accurate timezone/screen info",
+          "Can affect canvas-based visualizations"
+        ],
+        "interesting": [
+          "Spoofs timezone to UTC",
+          "Reports generic screen resolution"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "58.0",
+      "documentation": "https://wiki.mozilla.org/Security/Fingerprinting"
+    },
+    {
+      "key": "browser.tabs.drawInTitlebar",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Draw tabs in the title bar area (disable for traditional titlebar)",
+      "effects": {
+        "positive": [
+          "More vertical screen space when enabled",
+          "Modern UI appearance"
+        ],
+        "negative": [
+          "No traditional window title when enabled"
+        ],
+        "interesting": [
+          "Affects window manager integration on Linux",
+          "Changes drag behavior on window edges"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "4.0"
+    },
+    {
+      "key": "network.http.http3.enable",
+      "type": "boolean",
+      "category": "network",
+      "safetyLevel": "experimental",
+      "defaultValue": true,
+      "description": "Enable HTTP/3 protocol support (QUIC transport)",
+      "effects": {
+        "positive": [
+          "Faster page loads on supported servers",
+          "Better performance on poor connections"
+        ],
+        "negative": [
+          "May have compatibility issues with some CDNs",
+          "Higher CPU usage during handshake"
+        ],
+        "interesting": [
+          "Uses UDP instead of TCP",
+          "Includes TLS 1.3 natively"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "88.0",
+      "documentation": "https://datatracker.ietf.org/doc/html/rfc9114"
+    },
+    {
+      "key": "layout.css.grid.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable CSS Grid Layout support",
+      "effects": {
+        "positive": [
+          "Modern CSS layout capabilities",
+          "Better responsive design support"
+        ],
+        "negative": [],
+        "interesting": [
+          "Required for modern web development",
+          "Widely supported across browsers now"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "52.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout"
+    },
+    {
+      "key": "devtools.chrome.enabled",
+      "type": "boolean",
+      "category": "developer",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Enable browser chrome debugging (inspect Firefox's own UI)",
+      "effects": {
+        "positive": [
+          "Debug Firefox's internal UI",
+          "Essential for extension development"
+        ],
+        "negative": [
+          "Potential security risk if misused"
+        ],
+        "interesting": [
+          "Allows debugging the browser itself",
+          "Opens remote debugging capabilities"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "gfx.webrender.all",
+      "type": "boolean",
+      "category": "performance",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Force WebRender on all windows (GPU-accelerated rendering)",
+      "effects": {
+        "positive": [
+          "Potentially faster rendering",
+          "Better GPU utilization"
+        ],
+        "negative": [
+          "May cause graphical glitches on some GPUs",
+          "Higher GPU memory usage"
+        ],
+        "interesting": [
+          "Written in Rust",
+          "Part of Servo project"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "67.0",
+      "documentation": "https://wiki.mozilla.org/Platform/GFX/WebRender"
+    },
+    {
+      "key": "dom.security.https_only_mode",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Force all connections to use HTTPS",
+      "effects": {
+        "positive": [
+          "Protects against downgrade attacks",
+          "Ensures encrypted connections"
+        ],
+        "negative": [
+          "Breaks HTTP-only sites",
+          "May prevent access to local development servers"
+        ],
+        "interesting": [
+          "Automatically upgrades HTTP requests",
+          "Shows warning for HTTP-only sites"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "83.0"
+    },
+    {
+      "key": "browser.cache.disk.enable",
+      "type": "boolean",
+      "category": "performance",
+      "safetyLevel": "dangerous",
+      "defaultValue": true,
+      "description": "Enable disk cache for web content",
+      "effects": {
+        "positive": [
+          "Faster page loads on revisit"
+        ],
+        "negative": [
+          "Disabling breaks most web browsing",
+          "Significantly slower without cache",
+          "Higher bandwidth usage"
+        ],
+        "interesting": [
+          "Mainly useful for privacy-focused setups",
+          "Can be combined with memory-only cache"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    }
+  ]
+}

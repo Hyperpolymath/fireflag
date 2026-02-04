@@ -1,16 +1,15 @@
 {
-  "$schema": "https://raw.githubusercontent.com/rescript-lang/rescript-compiler/master/docs/docson/build-schema.json",
   "name": "fireflag",
   "version": "0.1.0",
   "sources": [
     {
-      "dir": "src",
+      "dir": "extension/lib/rescript",
       "subdirs": true
     }
   ],
   "package-specs": [
     {
-      "module": "esmodule",
+      "module": "es6",
       "in-source": true
     }
   ],
@@ -18,5 +17,6 @@
   "bs-dependencies": [],
   "warnings": {
     "error": "+101"
-  }
+  },
+  "bsc-flags": ["-open RescriptCore"]
 }

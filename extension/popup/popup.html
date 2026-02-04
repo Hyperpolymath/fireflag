@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+  <title>FireFlag - Quick Access</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <img src="../icons/fireflag-32.png" alt="FireFlag" class="logo">
+      <h1>FireFlag</h1>
+    </header>
+
+    <nav class="quick-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="safe">Safe</button>
+      <button class="filter-btn" data-filter="experimental">Experimental</button>
+      <button class="filter-btn" data-filter="modified">Modified</button>
+    </nav>
+
+    <div class="search-box">
+      <input type="text" id="search-input" placeholder="Search flags..." autocomplete="off">
+    </div>
+
+    <div class="flags-list" id="flags-list">
+      <!-- Populated by JavaScript -->
+      <div class="loading">Loading flags...</div>
+    </div>
+
+    <div class="permission-notice" id="permission-notice" style="display: none;">
+      <p class="notice-text"></p>
+      <button class="grant-permission-btn">Grant Permission</button>
+    </div>
+
+    <footer class="popup-footer">
+      <button id="open-sidebar" class="footer-btn">
+        <span>📊</span> Detailed View
+      </button>
+      <button id="open-options" class="footer-btn">
+        <span>⚙️</span> Settings
+      </button>
+    </footer>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
