@@ -1,0 +1,136 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+name: Vordr Runtime Verification
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+permissions: read-all
+
+jobs:
+  vordr-verification:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - name: Setup Firefox
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox
+
+      - name: Install web-ext
+        run: |
+          npm install -g web-ext
+
+      - name: Verify extension structure
+        run: |
+          echo "::group::Extension Structure Verification"
+
+          # Check required files
+          required_files=(
+            "extension/manifest.json"
+            "extension/background/background.js"
+            "extension/popup/popup.html"
+            "extension/sidebar/sidebar.html"
+            "extension/options/options.html"
+          )
+
+          for file in "${required_files[@]}"; do
+            if [ ! -f "$file" ]; then
+              echo "::error::Required file missing: $file"
+              exit 1
+            fi
+          done
+
+          echo "::endgroup::"
+
+      - name: Validate manifest.json
+        run: |
+          echo "::group::Manifest Validation"
+
+          # Validate JSON syntax
+          if ! jq empty extension/manifest.json 2>/dev/null; then
+            echo "::error::Invalid JSON in manifest.json"
+            exit 1
+          fi
+
+          # Check manifest version
+          version=$(jq -r '.manifest_version' extension/manifest.json)
+          if [ "$version" != "3" ]; then
+            echo "::error::Must use Manifest V3"
+            exit 1
+          fi
+
+          # Verify required permissions
+          if ! jq -e '.permissions | contains(["storage"])' extension/manifest.json > /dev/null; then
+            echo "::error::Missing required 'storage' permission"
+            exit 1
+          fi
+
+          echo "::endgroup::"
+
+      - name: Test extension loading
+        run: |
+          echo "::group::Extension Load Test"
+
+          # Lint extension with web-ext
+          cd extension
+          web-ext lint --warnings-as-errors || {
+            echo "::error::web-ext lint failed"
+            exit 1
+          }
+
+          echo "::endgroup::"
+
+      - name: Verify browser API usage
+        run: |
+          echo "::group::Browser API Verification"
+
+          # Check for Chrome API usage (should use Firefox 'browser' API)
+          if grep -r "chrome\." extension/ --include="*.js" | grep -v "// chrome"; then
+            echo "::error::Found chrome.* API usage - use browser.* instead"
+            exit 1
+          fi
+
+          # Verify permission usage
+          apis_needing_perms=(
+            "browser.browserSettings"
+            "browser.privacy"
+            "browser.downloads"
+          )
+
+          for api in "${apis_needing_perms[@]}"; do
+            if grep -r "$api" extension/ --include="*.js" > /dev/null; then
+              perm="${api#browser.}"
+              if ! jq -e ".optional_permissions | contains([\"$perm\"])" extension/manifest.json > /dev/null; then
+                echo "::warning::Using $api but permission not in manifest"
+              fi
+            fi
+          done
+
+          echo "::endgroup::"
+
+      - name: Check for dangerous patterns
+        run: |
+          echo "::group::Dangerous Pattern Detection"
+
+          # Check for unsafe functions
+          dangerous_patterns=(
+            "eval\("
+            "Function\("
+            "setTimeout.*string"
+            "setInterval.*string"
+          )
+
+          for pattern in "${dangerous_patterns[@]}"; do
+            if grep -rE "$pattern" extension/ --include="*.js"; then
+              echo "::error::Found dangerous pattern: $pattern"
+              exit 1
+            fi
+          done
+
+          echo "::endgroup::"

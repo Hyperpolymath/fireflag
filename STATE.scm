@@ -17,19 +17,26 @@
 
     (current-position
       ((phase . "Active Development")
-       (overall-completion . 10)
+       (overall-completion . 75)
        (components
          ((manifest . 100)
           (directory-structure . 100)
-          (flag-database . 0)
-          (rescript-core . 0)
-          (idris-ffi . 0)
-          (ui-popup . 0)
-          (ui-sidebar . 0)
-          (ui-options . 0)
-          (security-integration . 0)
+          (flag-database . 50)
+          (rescript-core . 100)
+          (idris-ffi . 100)
+          (ui-popup . 100)
+          (ui-sidebar . 100)
+          (ui-options . 100)
+          (devtools-panel . 100)
+          (background-worker . 100)
+          (security-integration . 80)
+          (icons . 100)
           (containerization . 0)))
-       (working-features . ())))
+       (working-features . ("Popup flag management"
+                            "Sidebar tracking & export"
+                            "Options page configuration"
+                            "DevTools performance panel"
+                            "Permission request flow"))))
 
     (route-to-mvp
       ((milestones
