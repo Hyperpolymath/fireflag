@@ -1,179 +1,424 @@
-= fireflag Roadmap
+= FireFlag Roadmap
 :toc: macro
 :toclevels: 2
 :icons: font
 
-Development roadmap for fireflag - feature flag management with fire-and-forget semantics.
+Development roadmap for FireFlag - Safe Firefox/Gecko flag management extension.
 
 toc::[]
 
-== Current Status
+== Current Status (v0.1.0)
+
+[cols="1,1,3",options="header"]
+|===
+|Component |Status |Details
+
+|**Extension Package**
+|✅ Complete
+|fireflag-0.1.0.xpi (120 KB, 46 files)
+
+|**Flag Database**
+|✅ Complete
+|105 flags across 8 categories with safety levels
+
+|**UI Components**
+|✅ Complete
+|Popup, sidebar, options page, DevTools panel
+
+|**Background Worker**
+|✅ Complete
+|Service worker for flag management
+
+|**Documentation**
+|✅ Complete
+|Privacy policy, submission docs, test reports
+
+|**Containerization**
+|✅ Complete
+|Guix + Chainguard reproducible builds
+
+|**Security Scanning**
+|✅ Complete
+|CodeQL, TruffleHog, svalin, selur
+
+|**Validation**
+|✅ Complete
+|web-ext lint 0 errors, 8/8 tests passing
+
+|**Screenshots**
+|✅ Complete
+|7 mockups ready for submission
+
+|**Signing**
+|⏳ Pending
+|Awaiting Mozilla API credentials
+
+|**Mozilla Submission**
+|⏳ Pending
+|Ready to submit once signed
+|===
+
+**Overall Completion:** 99% (only signing and submission remaining)
+
+== Version History
+
+=== v0.1.0 (February 2026) - Initial Release
+
+**Status:** Ready for Mozilla Add-ons submission
+
+**Features:**
+
+* ✅ 105-flag comprehensive database
+** Privacy (27 flags): tracking, fingerprinting, telemetry
+** UI (15 flags): tabs, downloads, appearance
+** Experimental (13 flags): WebAssembly, WebGPU, WebXR, PWA
+** Performance (7 flags): WebRender, cache, GPU
+** Network (7 flags): HTTP/3, DNS-over-HTTPS, proxy
+** Developer (7 flags): DevTools, WebDriver, debugging
+** Media (7 flags): WebRTC, autoplay, codecs, DRM
+** Accessibility (4 flags): motion, speech, assistive tech
+
+* ✅ Safety classification system
+** Safe - No known issues
+** Moderate - Some caveats
+** Advanced - For experienced users
+** Experimental - May cause instability
+
+* ✅ Browser Action Popup
+** Flag search and filtering
+** Category and safety level filters
+** Detailed flag information
+** Apply changes with permission requests
+
+* ✅ Sidebar Panel
+** Flags tab: view all modified flags
+** History tab: chronological change log
+** Export to JSON/CSV
+
+* ✅ Options Page
+** Auto-update toggle
+** Update frequency selection
+** Notification preferences
+** Permission management
+** Clear all data option
+
+* ✅ DevTools Integration
+** Active flags for current page
+** Performance impact indicators
+** Flag recommendations
+
+* ✅ Change Tracking
+** Before/after values
+** Timestamps for all changes
+** Rollback capability
+
+* ✅ Privacy & Security
+** Zero data collection
+** Local-only storage
+** GDPR/CCPA compliant
+** Reproducible builds (SLSA Level 3)
+
+* ✅ Documentation
+** 8000+ word privacy policy
+** Complete store listing content
+** Step-by-step submission checklist
+** Comprehensive test report
+
+**Known Limitations:**
+
+* Desktop only (Firefox 112+)
+* No Android support yet
+* Manual screenshot capture required for production
+* ReScript compilation warnings (non-blocking)
+
+== Version Roadmap
+
+=== v0.2.0 (Q2 2026) - Mobile & Enhancements
+
+**Status:** Planned
+
+**Goals:**
+
+* 🎯 **Android Support**
+** Firefox for Android compatibility
+** Mobile-optimized UI
+** Touch-friendly controls
+** API fallbacks for missing features
+
+* 🎯 **Enhanced Filtering**
+** Filter by Firefox version
+** Filter by performance impact
+** Filter by dependency chains
+** Custom filter presets
+
+* 🎯 **Flag Recommendations**
+** Usage-based suggestions
+** Privacy-focused presets
+** Performance optimization presets
+** Developer-friendly presets
+
+* 🎯 **Import/Export Profiles**
+** Save flag configurations as profiles
+** Share profiles with others
+** Import from JSON/TOML
+** Export with metadata
+
+* 🎯 **i18n Support**
+** Localization framework
+** Initial languages: en, es, fr, de, ja
+** Community translation workflow
+** RTL language support
+
+**Technical Improvements:**
+
+* Fix ReScript compilation warnings
+* Migrate innerHTML to textContent where possible
+* Add data_collection_permissions (Firefox 140+)
+* Improve error handling
+
+**Estimated Timeline:** 2-3 months after v0.1.0 launch
+
+=== v0.3.0 (Q3 2026) - Advanced Features
+
+**Status:** Planned
+
+**Goals:**
+
+* 🎯 **Multi-Profile Support**
+** Create multiple flag profiles
+** Switch between profiles quickly
+** Per-profile change tracking
+** Profile import/export
+
+* 🎯 **Flag Impact Analysis**
+** Performance metrics per flag
+** Resource usage tracking
+** A/B testing framework
+** Impact prediction
+
+* 🎯 **Advanced Permissions**
+** Fine-grained permission control
+** Permission presets (privacy, performance, etc.)
+** Temporary permission grants
+** Permission usage analytics
+
+* 🎯 **Automated Testing**
+** Flag compatibility testing
+** Regression detection
+** Automated rollback on errors
+** Test report generation
+
+* 🎯 **Enhanced DevTools**
+** Flag debugging tools
+** Performance profiling
+** Network impact analysis
+** Console integration
+
+**Database Enhancements:**
+
+* Expand to 150+ flags
+* Add flag dependencies
+* Version compatibility matrix
+* Flag deprecation tracking
+
+**Estimated Timeline:** Q3 2026
+
+=== v1.0.0 (Q4 2026) - Production Release
+
+**Status:** Planned
+
+**Goals:**
+
+* 🎯 **WASM Optimizations**
+** Compile flag evaluation to WASM
+** Improve performance by 10x
+** Reduce memory footprint
+** Edge-ready architecture
+
+* 🎯 **ReScript Full Compilation**
+** Complete ReScript type safety
+** Compile all UI code
+** Remove JavaScript fallbacks
+** Type-safe API layer
+
+* 🎯 **Advanced UI**
+** Flag visualization (graphs, charts)
+** Flag relationship diagrams
+** Interactive tutorials
+** Onboarding flow
+
+* 🎯 **Enterprise Features**
+** Bulk flag management
+** Team collaboration tools
+** Audit logging
+** Compliance reporting
+
+* 🎯 **Browser Compatibility**
+** Librewolf testing and optimization
+** Waterfox compatibility
+** Pale Moon support (different Gecko)
+** Edge compatibility (Chromium fork)
+
+* 🎯 **Documentation**
+** Video tutorials
+** Interactive demos
+** API documentation
+** Contributing guides
+
+**Quality Assurance:**
+
+* 100% test coverage
+* Automated UI testing
+* Cross-browser testing
+* Performance benchmarks
+
+**Estimated Timeline:** Q4 2026
+
+== Long-Term Vision (v2.0+)
+
+=== v2.0.0 - Ecosystem Integration
+
+**Potential Features:**
+
+* **Sync Across Devices** (encrypted, optional)
+* **Community Flag Presets** (curated configurations)
+* **Flag Marketplace** (share and discover configurations)
+* **Browser Integration** (native about:config alternative)
+* **CLI Tool** (manage flags from command line)
+* **API Server** (optional self-hosted sync)
+
+=== v3.0.0 - Advanced Automation
+
+**Potential Features:**
+
+* **AI-Powered Recommendations** (ML-based flag suggestions)
+* **Automatic Performance Tuning** (dynamic flag optimization)
+* **Conflict Resolution** (automatic handling of incompatible flags)
+* **Predictive Analytics** (flag impact prediction)
+* **Integration Ecosystem** (Zapier, IFTTT, webhooks)
+
+== Development Priorities
+
+**High Priority (v0.1.0 → v0.2.0):**
+
+1. Android support
+2. Real screenshot capture
+3. Fix ReScript compilation warnings
+4. i18n framework
+5. Flag recommendations
+
+**Medium Priority (v0.2.0 → v0.3.0):**
+
+1. Multi-profile support
+2. Import/export enhancements
+3. Flag impact analysis
+4. Advanced filtering
+5. DevTools enhancements
+
+**Low Priority (v0.3.0 → v1.0.0):**
+
+1. WASM compilation
+2. Full ReScript migration
+3. Advanced UI features
+4. Enterprise features
+5. Browser compatibility expansion
+
+== Community Contributions
+
+**We Welcome:**
+
+* **Flag Database** - Add missing flags, improve documentation
+* **Translations** - Help with i18n (v0.2.0)
+* **Testing** - Browser compatibility, bug reports
+* **UI/UX** - Design improvements, mockups
+* **Documentation** - Tutorials, guides, videos
+* **Code** - Bug fixes, features, optimizations
+
+**Contribution Areas by Skill:**
 
 [cols="1,3",options="header"]
 |===
-|Component |Status
+|Skill |Contribution Opportunities
 
-|**Repository Infrastructure**
-|Complete - CI/CD, multi-forge mirroring, policy enforcement
+|**JavaScript/ReScript**
+|UI components, flag evaluation logic, type definitions
 
-|**Language Policy**
-|Complete - ReScript/Rust/Deno stack defined and enforced
+|**Idris2**
+|Safety proofs, verification, type-level guarantees
 
-|**Core Implementation**
-|Not Started - Pending
+|**Zig**
+|FFI layer, WASM optimizations (future)
 
-|**SDK**
-|Not Started - Pending
+|**Design**
+|UI mockups, icon design, screenshot creation
 
-|**Documentation**
-|Partial - README and ROADMAP complete, API docs pending
+|**Technical Writing**
+|Documentation, tutorials, blog posts
+
+|**Testing**
+|Browser compatibility, regression testing, QA
+
+|**Translation**
+|i18n translations (v0.2.0+)
+
+|**DevOps**
+|CI/CD improvements, containerization, build automation
 |===
 
-== Phase 1: Core Library
+== Release Schedule
 
-=== 1.1 Data Model (ReScript)
+**v0.1.0:** February 2026 (submission to Mozilla Add-ons)
 
-* [ ] Flag type definitions
-** Boolean flags
-** String/enum variants
-** Percentage rollouts
-** User segment targeting
-* [ ] Targeting rules schema
-* [ ] Evaluation context types
-* [ ] Flag state serialization
+**v0.2.0:** ~3 months after v0.1.0 launch (Q2 2026)
 
-=== 1.2 Evaluation Engine (Rust/WASM)
+**v0.3.0:** ~3 months after v0.2.0 (Q3 2026)
 
-* [ ] High-performance flag evaluator
-* [ ] Targeting rule matcher
-* [ ] Percentage bucketing (deterministic hashing)
-* [ ] WASM compilation for edge deployment
-* [ ] ReScript bindings
+**v1.0.0:** ~3 months after v0.3.0 (Q4 2026)
 
-=== 1.3 Storage Adapters
+**Note:** Timeline subject to change based on community feedback and Mozilla review process.
 
-* [ ] In-memory store (default)
-* [ ] File-based persistence (JSON/TOML)
-* [ ] SQLite adapter
-* [ ] Redis adapter (optional)
+== Success Metrics
 
-== Phase 2: Fire-and-Forget Runtime
+**v0.1.0 Goals:**
 
-=== 2.1 Background Sync
+* ✅ Mozilla Add-ons approval
+* 🎯 1,000+ users in first month
+* 🎯 4.0+ star rating
+* 🎯 <5% bug reports
+* 🎯 10+ community contributors
 
-* [ ] Change detection and propagation
-* [ ] Conflict resolution strategy
-* [ ] Retry with exponential backoff
-* [ ] Offline queue and replay
+**v1.0.0 Goals:**
 
-=== 2.2 Caching Layer
+* 🎯 10,000+ active users
+* 🎯 4.5+ star rating
+* 🎯 50+ community contributors
+* 🎯 Featured on Mozilla Add-ons
+* 🎯 Support for 5+ languages
 
-* [ ] Multi-tier cache (memory -> disk -> remote)
-* [ ] TTL and invalidation
-* [ ] Stale-while-revalidate semantics
-* [ ] Cache warming on startup
+== Feedback & Requests
 
-=== 2.3 Event System
+**Submit Feature Requests:**
 
-* [ ] Flag change events
-* [ ] Evaluation events (for analytics)
-* [ ] Audit logging
-* [ ] Webhook dispatch
+* GitHub Issues: https://github.com/hyperpolymath/fireflag/issues
+* GitHub Discussions: https://github.com/hyperpolymath/fireflag/discussions
 
-== Phase 3: SDK & Integrations
+**Vote on Features:**
 
-=== 3.1 Server SDK (Gleam)
+* Upvote existing feature requests in GitHub Discussions
+* Comment with use cases and requirements
 
-* [ ] BEAM/Erlang runtime integration
-* [ ] Process-based flag caching
-* [ ] Hot flag updates without restart
-* [ ] Telemetry integration
+**Community Input:**
 
-=== 3.2 Client SDK (ReScript)
+We prioritize features based on:
 
-* [ ] Browser runtime
-* [ ] React/Dioxus hooks
-* [ ] Local evaluation mode
-* [ ] Streaming updates (SSE)
+1. User demand (upvotes, comments)
+2. Technical feasibility
+3. Alignment with project vision
+4. Security and privacy impact
+5. Maintainability
 
-=== 3.3 CLI (Rust)
+---
 
-* [ ] `fireflag init` - Project setup
-* [ ] `fireflag set` - Set flag values
-* [ ] `fireflag get` - Query flag state
-* [ ] `fireflag sync` - Force synchronization
-* [ ] `fireflag export/import` - Bulk operations
-
-== Phase 4: Management Interface
-
-=== 4.1 Admin API (Gleam)
-
-* [ ] REST API for flag management
-* [ ] GraphQL API (optional)
-* [ ] Authentication/authorization
-* [ ] Multi-environment support
-
-=== 4.2 Web Dashboard (ReScript + Tauri)
-
-* [ ] Flag listing and search
-* [ ] Flag editor with validation
-* [ ] Targeting rule builder
-* [ ] Audit log viewer
-* [ ] Environment switcher
-
-== Phase 5: Advanced Features
-
-=== 5.1 Experimentation
-
-* [ ] A/B testing framework
-* [ ] Metric collection
-* [ ] Statistical analysis
-* [ ] Experiment scheduling
-
-=== 5.2 Governance
-
-* [ ] Change approval workflows
-* [ ] Scheduled flag changes
-* [ ] Flag lifecycle management
-* [ ] Stale flag detection
-
-=== 5.3 Observability
-
-* [ ] OpenTelemetry integration
-* [ ] Prometheus metrics
-* [ ] Distributed tracing
-* [ ] Performance dashboards
-
-== Infrastructure Complete
-
-The following infrastructure is already in place:
-
-=== CI/CD Workflows
-
-* [x] Language policy enforcement (TypeScript, Go, npm blocked)
-* [x] Security policy (no weak crypto, HTTPS only, no secrets)
-* [x] Multi-forge mirroring (GitHub, GitLab, Bitbucket, Codeberg)
-* [x] Instant sync on push/release
-* [x] OSSF Scorecard integration
-* [x] CodeQL ready (activates with source code)
-* [x] EditorConfig compliance
-* [x] SPDX header validation
-* [x] SHA-pinned dependencies enforcement
-
-=== Repository Standards
-
-* [x] Dual MIT/AGPL-3.0 licensing
-* [x] RSR (Rhodium Standard Repository) certification
-* [x] Citation documentation (BibTeX, APA, MLA, Harvard, OSCOLA)
-* [x] Development task runner (justfile)
-* [x] Palimpsest License principles (non-binding overlay)
-
-== Contributing
-
-Contributions to any phase are welcome. Priority areas:
-
-1. **Phase 1.1** - Data model design and ReScript types
-2. **Phase 1.2** - Rust evaluation engine architecture
-3. **Phase 2.1** - Fire-and-forget sync protocol design
-
-See link:README.adoc[README.adoc] for development setup and contribution guidelines.
+**Last Updated:** February 4, 2026 +
+**Current Version:** 0.1.0 +
+**Next Milestone:** Mozilla Add-ons submission

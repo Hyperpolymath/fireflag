@@ -1,8 +1,9 @@
 = FireFlag
 
-image:https://img.shields.io/badge/License-PMPL--1.0-indigo.svg[License: PMPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/License-MPL--2.0-blue.svg[License: MPL-2.0,link="https://mozilla.org/MPL/2.0/"]
 image:https://img.shields.io/badge/RSR-Certified-gold[RSR Certified,link=https://github.com/hyperpolymath/rhodium-standard-repositories]
-image:https://img.shields.io/badge/Status-Active%20Development-yellow[Status]
+image:https://img.shields.io/badge/Status-Ready%20for%20Submission-brightgreen[Status]
+image:https://img.shields.io/badge/Version-0.1.0-blue[Version]
 
 **Safe Firefox/Gecko flag management for users and developers**
 
@@ -15,187 +16,395 @@ Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>
 :url-github: https://github.com/hyperpolymath/fireflag
 :url-gitlab: https://gitlab.com/hyperpolymath/fireflag
 :url-bitbucket: https://bitbucket.org/hyperpolymath/fireflag
-:url-codeberg: https://codeberg.org/hyperpolymath/fireflag
-
-**Feature flag management with fire-and-forget semantics**
-
-image:https://img.shields.io/badge/RSR-Certified-gold[RSR Certified,link=https://github.com/hyperpolymath/rhodium-standard-repositories]
-image:https://img.shields.io/badge/Status-Infrastructure%20Ready-yellow[Status]
 
 toc::[]
 
 == Overview
 
-fireflag is a feature flag management system designed around **fire-and-forget semantics** - set your flags and let the system handle propagation, caching, and consistency without manual intervention.
+FireFlag is a Firefox extension that makes about:config flags accessible and safe for everyone. Manage 105+ Firefox flags with built-in safety ratings, detailed documentation, and rollback protection.
 
-=== Current Project State
+**Key Features:**
 
-[IMPORTANT]
-====
-**Infrastructure Ready - Implementation Pending**
+* 🛡️ **Safety First** - Every flag rated: Safe, Moderate, Advanced, or Experimental
+* 📊 **Comprehensive Database** - 105 flags across 8 categories
+* 🔒 **Privacy-First** - Zero data collection, all data stored locally
+* ✅ **Change Tracking** - Before/after values with timestamps
+* 📤 **Export Capability** - JSON/CSV export for backup
+* 🔧 **DevTools Integration** - Performance impact analysis
+* 🔐 **Granular Permissions** - Only request what you need
 
-This repository contains comprehensive CI/CD infrastructure, policy enforcement, and multi-forge distribution. The actual feature flag implementation is the next phase of development. See link:ROADMAP.adoc[ROADMAP.adoc] for planned work.
-====
+== Current Status
 
-== Vision
+**Version:** 0.1.0 +
+**Phase:** Ready for Mozilla Add-ons Submission +
+**Completion:** 99%
 
-fireflag aims to provide:
-
-* **Fire-and-Forget Flag Management** - Configure once, propagate automatically
-* **Type-Safe SDK** - Built with ReScript for compile-time guarantees
-* **Edge-Ready** - Designed for distributed, low-latency evaluation
-* **Self-Hostable** - Full control over your feature flag infrastructure
-* **FOSS-First** - No vendor lock-in, dual-licensed MIT/PMPL-1.0
-
-== Repository Infrastructure
-
-The repository is production-ready with comprehensive infrastructure:
-
-=== CI/CD Workflows (12 Active)
-
-[cols="1,2",options="header"]
+[cols="1,1,2",options="header"]
 |===
-|Workflow |Purpose
+|Component |Status |Details
 
-|`rsr-antipattern.yml`
-|Enforces language policy (blocks TypeScript, Go, non-SaltStack Python)
+|**Extension Package**
+|✅ Complete
+|fireflag-0.1.0.xpi (120 KB, 46 files)
 
-|`npm-bun-blocker.yml`
-|Blocks npm/bun artifacts in favor of Deno
+|**Flag Database**
+|✅ Complete
+|105 flags with safety levels, documentation
 
-|`guix-nix-policy.yml`
-|Enforces Guix (primary) / Nix (fallback) package management
+|**UI Components**
+|✅ Complete
+|Popup, sidebar, options, DevTools panel
 
-|`security-policy.yml`
-|Blocks weak crypto, HTTP URLs, hardcoded secrets
+|**Documentation**
+|✅ Complete
+|Privacy policy, submission docs, test reports
 
-|`wellknown-enforcement.yml`
-|RFC 9116 security.txt validation
+|**Validation**
+|✅ Complete
+|0 errors, 8/8 automated tests passing
 
-|`workflow-linter.yml`
-|Validates SPDX headers, SHA-pinned actions, permissions
+|**Screenshots**
+|✅ Complete
+|7 mockups ready for submission
 
-|`instant-sync.yml`
-|Triggers forge propagation on push/release
+|**Signing**
+|⏳ Pending
+|Awaiting Mozilla API credentials
 
-|`mirror.yml`
-|Syncs to GitLab and Bitbucket mirrors
-
-|`quality.yml`
-|File permissions, secrets scanning, TODO tracking, EditorConfig
-
-|`jekyll-gh-pages.yml`
-|Documentation site deployment
-
-|`codeql.yml`
-|Security analysis (activates with source code)
-
-|`scorecard.yml`
-|OSSF security scorecard
+|**Submission**
+|⏳ Pending
+|Ready to submit once signed
 |===
 
-=== Multi-Forge Distribution
+== Installation
 
-fireflag is mirrored across multiple forges for resilience:
+=== From Source (Development)
 
-[horizontal]
-GitHub (Primary):: {url-github}
-GitLab:: {url-gitlab}
-Bitbucket:: {url-bitbucket}
-Codeberg:: {url-codeberg}
+[source,bash]
+----
+# Clone repository
+git clone https://github.com/hyperpolymath/fireflag
+cd fireflag
 
-Automatic synchronization keeps all mirrors current via `instant-sync.yml`.
+# Install dependencies (Deno required)
+# No npm install needed - Deno handles dependencies
 
-== Technology Stack
+# Build extension
+just build-ext
 
-fireflag follows the Hyperpolymath Language Policy:
+# Run in Firefox for testing
+just run-ext
 
-=== Approved Stack
+# Or load manually
+# Firefox → about:debugging → Load Temporary Add-on
+# Select: extension/web-ext-artifacts/fireflag-0.1.0.xpi
+----
 
-[cols="1,2",options="header"]
+=== From Mozilla Add-ons (Coming Soon)
+
+Once approved by Mozilla:
+
+[source,bash]
+----
+# Install from addons.mozilla.org
+# Visit: https://addons.mozilla.org/firefox/addon/fireflag/
+----
+
+== Usage
+
+=== Browser Action Popup
+
+Click the FireFlag icon in the toolbar:
+
+* **Search flags** - Type to filter by name or keyword
+* **Filter by category** - Privacy, Performance, Network, UI, Developer, Media, Accessibility, Experimental
+* **Filter by safety** - Safe, Moderate, Advanced, Experimental
+* **View details** - Click a flag to see full documentation
+* **Apply changes** - Toggle or modify flag values (requires permissions)
+
+=== Sidebar Panel
+
+Open via View → Sidebars → FireFlag (or kbd:[Ctrl+Shift+Y]):
+
+* **Flags tab** - View all modified flags with before/after values
+* **History tab** - Chronological change history with timestamps
+* **Export** - Download as JSON or CSV
+
+=== Options Page
+
+Right-click FireFlag icon → Manage Extension → Options:
+
+* **Auto-update** - Enable/disable weekly database updates
+* **Notifications** - Toggle update notifications
+* **Permissions** - Manage granted permissions
+* **Clear data** - Reset all changes
+
+=== DevTools Panel
+
+Press kbd:[F12] → FireFlag tab:
+
+* **Active flags** - Flags affecting current page
+* **Performance impact** - Resource usage indicators
+* **Recommendations** - Suggested flag changes
+
+== Flag Database
+
+**Total Flags:** 105 across 8 categories
+
+[cols="1,1,3",options="header"]
 |===
-|Technology |Use Case
+|Category |Count |Examples
 
-|**ReScript**
-|Primary application code (type-safe, compiles to JS)
+|**Privacy**
+|27
+|resistFingerprinting, trackingprotection, telemetry
 
-|**Rust**
-|Performance-critical components, CLI tools, WASM
+|**UI**
+|15
+|Tabs, downloads, appearance customization
 
-|**Deno**
-|Runtime and package management (replaces Node/npm)
+|**Experimental**
+|13
+|WebAssembly, WebGPU, WebXR, PWA features
 
-|**Gleam**
-|Backend services (BEAM or JS target)
+|**Performance**
+|7
+|WebRender, cache, GPU acceleration
 
-|**Tauri 2.0+ / Dioxus**
-|Mobile applications (Rust-first approach)
+|**Network**
+|7
+|HTTP/3, DNS-over-HTTPS, proxy settings
 
-|**Bash/POSIX**
-|Build scripts and automation (minimal)
+|**Developer**
+|7
+|DevTools, WebDriver, debugging
+
+|**Media**
+|7
+|WebRTC, autoplay, codecs, DRM
+
+|**Accessibility**
+|4
+|Motion, speech, assistive technologies
 |===
 
-=== Explicitly Banned
+**Safety Levels:**
 
-TypeScript, Node.js, npm, Bun, Go, general Python, Java, Kotlin, Swift, React Native, Flutter
+* **Safe** - No known issues, recommended for all users
+* **Moderate** - Some caveats, read documentation first
+* **Advanced** - For experienced users only, may affect stability
+* **Experimental** - Unstable, may cause crashes or data loss
 
-See link:.claude/CLAUDE.md[.claude/CLAUDE.md] for full language policy.
+== Privacy & Security
+
+**Zero Data Collection:**
+
+* ❌ No analytics or telemetry
+* ❌ No tracking or profiling
+* ❌ No personal information collected
+* ❌ No remote servers (except optional database updates)
+
+**Local Storage Only:**
+
+* ✅ All data in `browser.storage.local`
+* ✅ Stays on your device
+* ✅ Fully exportable
+* ✅ Completely deletable
+
+**Network Activity:**
+
+* Weekly database update checks (optional, can be disabled)
+* Extension updates from Mozilla Add-ons (standard Firefox behavior)
+* **Nothing else**
+
+**Security:**
+
+* ✅ CodeQL static analysis
+* ✅ TruffleHog secret detection
+* ✅ Neurosymbolic security scanning (svalin)
+* ✅ SLSA Level 3 provenance (reproducible builds)
+
+See link:PRIVACY.md[PRIVACY.md] for full privacy policy.
 
 == Development
 
 === Prerequisites
 
-* https://deno.land/[Deno] (runtime)
-* https://github.com/casey/just[just] (task runner)
-* https://guix.gnu.org/[GNU Guix] or https://nixos.org/[Nix] (package management)
+* **Deno** 1.40+ (package management and runtime)
+* **Firefox** 112+ (minimum version for extension)
+* **ImageMagick** (for screenshot generation)
+* **Guix** or **Nix** (optional, for containerized builds)
 
-=== Task Runner
+=== Quick Start
 
 [source,bash]
 ----
-# List available tasks
-just
+# Install justfile runner
+# Fedora: dnf install just
+# Arch: pacman -S just
+# macOS: brew install just
 
-# Build (when implemented)
-just build
+# Build extension
+just build-ext
 
-# Test (when implemented)
+# Run in Firefox
+just run-ext
+
+# Lint extension
+just lint-ext
+
+# Run all tests
 just test
-
-# Format code
-just fmt
-
-# Lint code
-just lint
 ----
 
-== License
+=== Project Structure
 
-Dual-licensed under your choice of:
+[source]
+----
+fireflag/
+├── extension/              # Extension source
+│   ├── manifest.json       # Manifest V3 config
+│   ├── background/         # Service worker
+│   ├── popup/              # Browser action UI
+│   ├── sidebar/            # Sidebar panel
+│   ├── options/            # Settings page
+│   ├── devtools/           # DevTools integration
+│   ├── data/               # Flag database (105 flags)
+│   ├── icons/              # Extension icons
+│   └── lib/
+│       ├── idris/          # Safety proofs (Idris2)
+│       └── rescript/       # Type definitions (ReScript)
+├── .containerization/      # Docker + Guix builds
+├── .screenshots/           # Screenshot generation
+├── scripts/                # Build and signing scripts
+├── STATE.scm               # Project state tracking
+├── ECOSYSTEM.scm           # Ecosystem relationships
+└── META.scm                # Architecture decisions
+----
 
-* **Palimpsest-MPL-1.0 License** - Maximum flexibility for most uses
-* **PMPL-1.0-or-later** - Copyleft protection for network services
+=== Build System
 
-Additionally encourages (non-binding) adherence to https://github.com/hyperpolymath/palimpsest-license[Palimpsest License] principles around consent-based digital interaction.
+**Simple Build:**
+[source,bash]
+----
+just build-ext  # Uses web-ext
+----
 
-See link:LICENSE.txt[LICENSE.txt] for full terms.
+**Full Build Pipeline:**
+[source,bash]
+----
+just full-build
+# 1. Check Idris2 proofs
+# 2. Build ReScript (if applicable)
+# 3. Generate icons
+# 4. Lint extension
+# 5. Run security scans
+# 6. Build .xpi package
+----
+
+**Containerized Build:**
+[source,bash]
+----
+just container-build-full
+# Reproducible build with Guix + Chainguard
+# Generates SLSA provenance
+# SBOM (CycloneDX)
+----
+
+=== Signing & Submission
+
+[source,bash]
+----
+# Get Mozilla API credentials
+# https://addons.mozilla.org/developers/addon/api/key/
+
+# Sign extension
+./scripts/sign-extension.sh \
+  --api-key YOUR_KEY \
+  --api-secret YOUR_SECRET \
+  --channel listed
+
+# Signed .xpi will be created in extension/web-ext-artifacts/
+----
+
+See link:SUBMISSION-CHECKLIST.md[SUBMISSION-CHECKLIST.md] for complete submission guide.
 
 == Contributing
 
-Contributions welcome! Please ensure:
+See link:CONTRIBUTING.md[CONTRIBUTING.md] for general contribution guidelines.
 
-* Code follows the approved technology stack
-* All CI checks pass
-* SPDX license headers on new files
-* SHA-pinned dependencies
+See link:CONTRIBUTING-FLAGS.md[CONTRIBUTING-FLAGS.md] for flag database contributions.
 
-== Citation
+**Areas for Contribution:**
 
-See link:docs/CITATIONS.adoc[docs/CITATIONS.adoc] for citation formats (BibTeX, APA, MLA, Harvard, OSCOLA).
+* **Flag Database** - Add missing flags, improve documentation
+* **Translations** - i18n support (planned for v0.2.0)
+* **Testing** - Browser compatibility testing (Librewolf, Waterfox, Pale Moon)
+* **UI/UX** - Design improvements
+* **Documentation** - User guides, tutorials, videos
+
+== Roadmap
+
+See link:ROADMAP.adoc[ROADMAP.adoc] for detailed roadmap.
+
+**v0.1.0 (Current):**
+
+* ✅ 105-flag database with safety levels
+* ✅ Browser action popup
+* ✅ Sidebar panel with tracking
+* ✅ Options page
+* ✅ DevTools integration
+* ✅ Privacy policy & submission docs
+* ⏳ Mozilla Add-ons submission
+
+**v0.2.0 (Planned):**
+
+* Android support (Firefox for Android)
+* Flag recommendations based on usage
+* Import/export profiles
+* Multi-profile support
+* Advanced filtering (by version, impact, dependencies)
+* i18n support
+
+**v1.0.0 (Future):**
+
+* WASM optimizations for flag evaluation
+* ReScript compilation for type safety
+* Advanced permission management
+* Flag impact analysis
+* Automated testing suite
+
+== License
+
+**Mozilla Public License 2.0 (MPL-2.0)**
+
+FireFlag is open source software licensed under MPL-2.0. This was chosen for compatibility with Mozilla Add-ons ecosystem requirements.
+
+**Preferred License:** Palimpsest License (PMPL-1.0-or-later) +
+**Fallback License:** MPL-2.0 (for Chrome/Firefox extension stores)
+
+See link:LICENSE[LICENSE] for full text.
 
 == Links
 
-* link:ROADMAP.adoc[Development Roadmap]
-* link:docs/CITATIONS.adoc[Citation Guide]
-* link:.claude/CLAUDE.md[Language Policy]
-* https://github.com/hyperpolymath/rhodium-standard-repositories[RSR Framework]
+* **GitHub:** {url-github}
+* **Issues:** {url-github}/issues
+* **Discussions:** {url-github}/discussions
+* **GitLab Mirror:** {url-gitlab}
+* **Bitbucket Mirror:** {url-bitbucket}
+
+== Acknowledgments
+
+Built with:
+
+* **ReScript** - Type-safe JavaScript compilation
+* **Idris2** - Formal verification and safety proofs
+* **Guix** - Reproducible build environment
+* **Chainguard** - Minimal security-focused containers
+* **web-ext** - Mozilla's official extension build tool
+
+Inspired by the need for safer about:config management in Firefox and Gecko-based browsers.
+
+---
+
+**FireFlag** - Safe Firefox flag management for everyone.
