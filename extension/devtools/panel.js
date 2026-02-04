@@ -62,7 +62,7 @@ async function loadActiveFlags() {
     document.getElementById('flag-count').textContent = count;
 
     if (count === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No modified flags detected</td></tr>';
+      safeSetHTML(tbody, '<tr><td colspan="5" class="empty-state">No modified flags detected</td></tr>');
       return;
     }
 
@@ -70,7 +70,7 @@ async function loadActiveFlags() {
     const response = await fetch('../data/flags-database.json');
     const database = await response.json();
 
-    tbody.innerHTML = Object.entries(states).map(([key, state]) => {
+    safeSetHTML(tbody, Object.entries(states).map(([key, state]) => {
       const flag = database.flags.find(f => f.key === key);
       const safety = flag ? flag.safetyLevel : 'unknown';
       const modified = new Date(state.timestamp).toLocaleString();
@@ -86,7 +86,7 @@ async function loadActiveFlags() {
           </td>
         </tr>
       `;
-    }).join('');
+    }).join(''));
 
     // Add inspect button handlers
     tbody.querySelectorAll('.inspect-btn').forEach(btn => {
@@ -156,7 +156,7 @@ async function toggleRecording() {
     baselineMetrics = await collectMetrics();
     recording = true;
     btn.textContent = '⏹ Stop Recording';
-    status.innerHTML = '<span>⏺ Recording (change a flag and reload)</span>';
+    safeSetHTML(status, '<span>⏺ Recording (change a flag and reload)</span>');
     status.classList.add('active');
     logToConsole('Started impact recording - baseline captured', 'info');
   } else {
@@ -164,7 +164,7 @@ async function toggleRecording() {
     const afterMetrics = await collectMetrics();
     recording = false;
     btn.textContent = '⏺ Record Impact';
-    status.innerHTML = '<span>⏸ Not Recording</span>';
+    safeSetHTML(status, '<span>⏸ Not Recording</span>');
     status.classList.remove('active');
 
     if (baselineMetrics && afterMetrics) {
@@ -185,7 +185,7 @@ function analyzeImpact(before, after) {
 
   const improved = loadChange < 0;
 
-  results.innerHTML = `
+  safeSetHTML(results, `
     <div class="impact-item">
       <div class="impact-header">
         <span class="impact-flag">Performance Impact Analysis</span>
@@ -208,7 +208,7 @@ function analyzeImpact(before, after) {
         </div>
       </div>
     </div>
-  `;
+  `);
 }
 
 // Inspect specific flag
@@ -264,10 +264,10 @@ function logToConsole(message, level = 'info') {
 
   const messageEl = document.createElement('div');
   messageEl.className = `console-message ${level}`;
-  messageEl.innerHTML = `
+  safeSetHTML(messageEl, `
     <span class="timestamp">[${timestamp}]</span>
     <span class="message">${escapeHtml(message)}</span>
-  `;
+  `);
 
   output.appendChild(messageEl);
   output.scrollTop = output.scrollHeight;
@@ -288,7 +288,9 @@ function getConsoleLogs() {
 // Clear console
 function clearConsole() {
   const output = document.getElementById('console-output');
-  output.innerHTML = '';
+  while (output.firstChild) {
+    output.removeChild(output.firstChild);
+  }
   logToConsole('Console cleared', 'info');
 }
 

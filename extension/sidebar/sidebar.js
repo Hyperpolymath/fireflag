@@ -102,7 +102,7 @@ async function renderFlagsView() {
       return true;
     });
 
-    grid.innerHTML = filtered.map(flag => createFlagCard(flag, flagStates[flag.key])).join('');
+    safeSetHTML(grid, filtered.map(flag => createFlagCard(flag, flagStates[flag.key])).join(''));
   };
 
   categoryFilter.addEventListener('change', renderGrid);
@@ -169,9 +169,9 @@ async function renderTrackingView() {
   // Render timeline
   const timeline = document.getElementById('timeline');
   if (history.length === 0) {
-    timeline.innerHTML = '<p class="placeholder">No flag changes tracked yet.</p>';
+    safeSetHTML(timeline, '<p class="placeholder">No flag changes tracked yet.</p>');
   } else {
-    timeline.innerHTML = history.slice().reverse().map(change => {
+    safeSetHTML(timeline, history.slice().reverse().map(change => {
       const date = new Date(change.timestamp);
       return `
         <div class="timeline-item">
@@ -184,7 +184,7 @@ async function renderTrackingView() {
           </div>
         </div>
       `;
-    }).join('');
+    }).join(''));
   }
 }
 
@@ -206,7 +206,7 @@ async function renderAnalyticsView() {
   });
 
   const summaryEl = document.getElementById('effects-summary');
-  summaryEl.innerHTML = `
+  safeSetHTML(summaryEl, `
     <div class="tracking-stats">
       <div class="stat-card">
         <span class="stat-label">Positive Effects</span>
@@ -221,7 +221,7 @@ async function renderAnalyticsView() {
         <span class="stat-value" style="color: var(--experimental-color);">${effectsCount.interesting}</span>
       </div>
     </div>
-  `;
+  `);
 }
 
 // Generate export

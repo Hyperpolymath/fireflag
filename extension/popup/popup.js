@@ -108,11 +108,11 @@ async function renderFlags() {
   });
 
   if (filteredFlags.length === 0) {
-    flagsList.innerHTML = '<div class="loading">No flags found matching your criteria.</div>';
+    safeSetHTML(flagsList, '<div class="loading">No flags found matching your criteria.</div>');
     return;
   }
 
-  flagsList.innerHTML = filteredFlags.map(flag => createFlagItem(flag, states[flag.key])).join('');
+  safeSetHTML(flagsList, filteredFlags.map(flag => createFlagItem(flag, states[flag.key])).join(''));
 
   // Add toggle event listeners
   flagsList.querySelectorAll('.flag-toggle input').forEach(toggle => {
@@ -244,12 +244,12 @@ function showNotification(message, type = 'info') {
 // Show error message
 function showError(message) {
   const flagsList = document.getElementById('flags-list');
-  flagsList.innerHTML = `
+  safeSetHTML(flagsList, `
     <div style="padding: 40px 20px; text-align: center; color: var(--dangerous-color);">
       <p style="font-weight: 600; margin-bottom: 8px;">Error</p>
       <p style="font-size: 12px;">${escapeHtml(message)}</p>
     </div>
-  `;
+  `);
 }
 
 // Escape HTML to prevent XSS

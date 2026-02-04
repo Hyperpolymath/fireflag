@@ -50,25 +50,25 @@ async function loadPermissions() {
 
   // Show current permissions
   if (allPerms.permissions.length > 0) {
-    currentPermsEl.innerHTML = allPerms.permissions.map(perm => `
+    safeSetHTML(currentPermsEl, allPerms.permissions.map(perm => `
       <div class="permission-item">
         <span class="permission-name">${perm}</span>
         <span class="permission-status granted">Granted</span>
       </div>
-    `).join('');
+    `).join(''));
   } else {
-    currentPermsEl.innerHTML = '<p class="setting-description">No permissions granted</p>';
+    safeSetHTML(currentPermsEl, '<p class="setting-description">No permissions granted</p>');
   }
 
   // Show optional permissions
   const optionalPerms = manifest.optional_permissions || [];
   if (optionalPerms.length > 0) {
-    optionalPermsEl.innerHTML = optionalPerms.map(perm => `
+    safeSetHTML(optionalPermsEl, optionalPerms.map(perm => `
       <div class="permission-item">
         <span class="permission-name">${perm}</span>
         <button class="secondary-btn grant-perm-btn" data-perm="${perm}">Grant</button>
       </div>
-    `).join('');
+    `).join(''));
 
     document.querySelectorAll('.grant-perm-btn').forEach(btn => {
       btn.addEventListener('click', async (e) => {
