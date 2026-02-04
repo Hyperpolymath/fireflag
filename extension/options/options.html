@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+  <title>FireFlag - Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <header class="options-header">
+      <div class="header-content">
+        <img src="../icons/fireflag-48.png" alt="FireFlag" class="logo">
+        <div>
+          <h1>FireFlag Settings</h1>
+          <p class="version" id="version">v0.1.0</p>
+        </div>
+      </div>
+    </header>
+
+    <nav class="options-nav">
+      <button class="nav-btn active" data-section="general">General</button>
+      <button class="nav-btn" data-section="tracking">Tracking</button>
+      <button class="nav-btn" data-section="permissions">Permissions</button>
+      <button class="nav-btn" data-section="advanced">Advanced</button>
+      <button class="nav-btn" data-section="about">About</button>
+    </nav>
+
+    <main class="options-main">
+      <!-- General Section -->
+      <section class="options-section" id="section-general">
+        <h2>General Settings</h2>
+
+        <div class="setting-group">
+          <h3>Flag Database</h3>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="auto-update-database">
+              <span>Automatically update flag database</span>
+            </label>
+            <p class="setting-description">Check for database updates weekly and apply automatically.</p>
+          </div>
+          <div class="setting-item">
+            <button id="update-database-btn" class="secondary-btn">Check for Updates Now</button>
+            <p class="setting-description">Last updated: <span id="last-updated">Never</span></p>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>User Interface</h3>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="show-modified-badge">
+              <span>Show badge on modified flags</span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="confirm-dangerous">
+              <span>Confirm before modifying dangerous flags</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tracking Section -->
+      <section class="options-section" id="section-tracking" style="display: none;">
+        <h2>Tracking Settings</h2>
+
+        <div class="setting-group">
+          <h3>Change History</h3>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="enable-tracking" checked>
+              <span>Enable flag change tracking</span>
+            </label>
+            <p class="setting-description">Track all flag changes for analytics and export.</p>
+          </div>
+          <div class="setting-item">
+            <label for="history-limit">Maximum history entries:</label>
+            <input type="number" id="history-limit" min="10" max="1000" value="100" class="number-input">
+            <p class="setting-description">Older entries will be automatically removed.</p>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>Performance Metrics</h3>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="enable-metrics">
+              <span>Collect performance metrics</span>
+            </label>
+            <p class="setting-description">Track browser performance impact of flag changes (experimental).</p>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>Data Management</h3>
+          <button id="clear-all-data-btn" class="danger-btn">Clear All Tracking Data</button>
+          <p class="setting-description">This will remove all flag states and history. Cannot be undone.</p>
+        </div>
+      </section>
+
+      <!-- Permissions Section -->
+      <section class="options-section" id="section-permissions" style="display: none;">
+        <h2>Permissions</h2>
+
+        <div class="setting-group">
+          <h3>Current Permissions</h3>
+          <div id="current-permissions">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>Optional Permissions</h3>
+          <p class="setting-description">Grant permissions to enable additional features.</p>
+          <div id="optional-permissions">
+            <!-- Populated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Advanced Section -->
+      <section class="options-section" id="section-advanced" style="display: none;">
+        <h2>Advanced Settings</h2>
+
+        <div class="setting-group">
+          <h3>Developer Options</h3>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="devtools-integration">
+              <span>Enable DevTools integration</span>
+            </label>
+            <p class="setting-description">Adds FireFlag panel to Firefox DevTools (requires restart).</p>
+          </div>
+          <div class="setting-item">
+            <label>
+              <input type="checkbox" id="verbose-logging">
+              <span>Verbose console logging</span>
+            </label>
+            <p class="setting-description">Log all flag operations to browser console.</p>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>Import/Export</h3>
+          <button id="import-config-btn" class="secondary-btn">Import Configuration</button>
+          <button id="export-config-btn" class="secondary-btn">Export Configuration</button>
+          <p class="setting-description">Backup and restore your FireFlag settings and flag states.</p>
+        </div>
+
+        <div class="setting-group">
+          <h3>Reset</h3>
+          <button id="reset-settings-btn" class="danger-btn">Reset All Settings</button>
+          <p class="setting-description">Restore default settings (does not affect flag states).</p>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section class="options-section" id="section-about" style="display: none;">
+        <h2>About FireFlag</h2>
+
+        <div class="about-card">
+          <img src="../icons/fireflag-96.png" alt="FireFlag" class="about-logo">
+          <h3>FireFlag</h3>
+          <p class="about-version">Version <span id="about-version">0.1.0</span></p>
+          <p class="about-description">
+            Safe Firefox/Gecko flag management for users and developers.
+            Experiment with browser flags confidently with safety classification,
+            tracking, and analytics.
+          </p>
+        </div>
+
+        <div class="setting-group">
+          <h3>Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Author:</span>
+              <span class="info-value">Jonathan D.A. Jewell</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">License:</span>
+              <span class="info-value">PMPL-1.0-or-later</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Browser:</span>
+              <span class="info-value" id="browser-info">Loading...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <h3>Links</h3>
+          <div class="links-grid">
+            <a href="https://github.com/hyperpolymath/fireflag" target="_blank" class="link-btn">
+              GitHub Repository
+            </a>
+            <a href="https://github.com/hyperpolymath/fireflag/issues" target="_blank" class="link-btn">
+              Report Issue
+            </a>
+            <a href="https://github.com/hyperpolymath/fireflag/blob/main/LICENSE" target="_blank" class="link-btn">
+              License
+            </a>
+            <a href="https://github.com/hyperpolymath/palimpsest-license" target="_blank" class="link-btn">
+              Palimpsest License
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="options-footer">
+      <button id="save-settings-btn" class="primary-btn">Save Settings</button>
+      <span class="save-status" id="save-status"></span>
+    </footer>
+  </div>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

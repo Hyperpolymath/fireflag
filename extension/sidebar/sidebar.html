@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+  <title>FireFlag - Detailed View</title>
+  <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+  <div class="sidebar-container">
+    <header class="sidebar-header">
+      <div class="header-content">
+        <img src="../icons/fireflag-32.png" alt="FireFlag" class="logo">
+        <div>
+          <h1>FireFlag</h1>
+          <p class="subtitle">Developer Tracking & Analytics</p>
+        </div>
+      </div>
+    </header>
+
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" data-view="flags">
+        <span>🚩</span> Flags
+      </button>
+      <button class="nav-btn" data-view="tracking">
+        <span>📊</span> Tracking
+      </button>
+      <button class="nav-btn" data-view="analytics">
+        <span>📈</span> Analytics
+      </button>
+      <button class="nav-btn" data-view="export">
+        <span>💾</span> Export
+      </button>
+    </nav>
+
+    <!-- Flags View -->
+    <div class="view-container" id="view-flags">
+      <div class="view-header">
+        <h2>All Flags</h2>
+        <div class="view-actions">
+          <select id="category-filter" class="filter-select">
+            <option value="all">All Categories</option>
+            <option value="privacy">Privacy & Security</option>
+            <option value="performance">Performance</option>
+            <option value="experimental">Experimental</option>
+            <option value="developer">Developer Tools</option>
+            <option value="ui">User Interface</option>
+            <option value="network">Network</option>
+          </select>
+          <select id="safety-filter" class="filter-select">
+            <option value="all">All Safety Levels</option>
+            <option value="safe">Safe</option>
+            <option value="experimental">Experimental</option>
+            <option value="dangerous">Dangerous</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flags-grid" id="flags-grid">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Tracking View -->
+    <div class="view-container" id="view-tracking" style="display: none;">
+      <div class="view-header">
+        <h2>Flag Change Tracking</h2>
+        <button id="clear-history-btn" class="secondary-btn">Clear History</button>
+      </div>
+
+      <div class="tracking-stats">
+        <div class="stat-card">
+          <span class="stat-label">Total Changes</span>
+          <span class="stat-value" id="stat-total">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Active Flags</span>
+          <span class="stat-value" id="stat-active">0</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Last Modified</span>
+          <span class="stat-value" id="stat-last">Never</span>
+        </div>
+      </div>
+
+      <div class="timeline" id="timeline">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- Analytics View -->
+    <div class="view-container" id="view-analytics" style="display: none;">
+      <div class="view-header">
+        <h2>Performance Analytics</h2>
+        <button id="refresh-analytics-btn" class="secondary-btn">Refresh</button>
+      </div>
+
+      <div class="analytics-section">
+        <h3>Browser Performance Impact</h3>
+        <div id="performance-metrics">
+          <p class="placeholder">Enable performance tracking in settings to see metrics.</p>
+        </div>
+      </div>
+
+      <div class="analytics-section">
+        <h3>Flag Effects Summary</h3>
+        <div id="effects-summary">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Export View -->
+    <div class="view-container" id="view-export" style="display: none;">
+      <div class="view-header">
+        <h2>Export Reports</h2>
+      </div>
+
+      <div class="export-options">
+        <h3>Export Format</h3>
+        <div class="format-buttons">
+          <button class="format-btn active" data-format="json">
+            <span>📄</span> JSON
+          </button>
+          <button class="format-btn" data-format="markdown">
+            <span>📝</span> Markdown
+          </button>
+          <button class="format-btn" data-format="csv">
+            <span>📊</span> CSV
+          </button>
+        </div>
+
+        <h3>Include in Export</h3>
+        <div class="export-checkboxes">
+          <label>
+            <input type="checkbox" id="export-flags" checked>
+            <span>Flag States</span>
+          </label>
+          <label>
+            <input type="checkbox" id="export-history" checked>
+            <span>Change History</span>
+          </label>
+          <label>
+            <input type="checkbox" id="export-effects">
+            <span>Flag Effects</span>
+          </label>
+          <label>
+            <input type="checkbox" id="export-metrics">
+            <span>Performance Metrics</span>
+          </label>
+        </div>
+
+        <h3>Notes (Optional)</h3>
+        <textarea id="export-notes" placeholder="Add notes about this configuration..." rows="4"></textarea>
+
+        <button id="generate-export-btn" class="primary-btn">Generate Export</button>
+      </div>
+
+      <div class="export-preview" id="export-preview" style="display: none;">
+        <h3>Preview</h3>
+        <pre id="export-content"></pre>
+        <div class="export-actions">
+          <button id="download-export-btn" class="primary-btn">Download</button>
+          <button id="copy-export-btn" class="secondary-btn">Copy to Clipboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="sidebar.js"></script>
+</body>
+</html>
