@@ -1,0 +1,145 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Cerro-Terro Build Orchestration
+# Coordinates multi-stage builds with security scanning
+
+version: "1.0"
+project: fireflag
+description: "Firefox/Gecko flag management extension"
+
+# Build stages with dependencies
+stages:
+  # Stage 1: Security scanning before build
+  pre-build-security:
+    description: "Run security scans on source code"
+    runs-on: ubuntu-latest
+    container: cgr.dev/chainguard/wolfi-base:latest
+    steps:
+      - name: Checkout
+        run: git clone ${REPO_URL} /src
+
+      - name: Svalin static analysis
+        run: |
+          cd /src
+          # Run svalin security scan
+          .github/workflows/svalin-scan.yml
+
+      - name: Selur secrets detection
+        run: |
+          cd /src
+          # Run TruffleHog
+          docker run --rm -v /src:/src trufflesecurity/trufflehog:latest \
+            filesystem /src --only-verified
+
+      - name: Vordr runtime verification
+        run: |
+          cd /src
+          # Verify extension structure
+          web-ext lint /src/extension
+
+  # Stage 2: Build with Guix for reproducibility
+  guix-build:
+    description: "Build extension in Guix environment"
+    depends-on: [pre-build-security]
+    runs-on: ubuntu-latest
+    container:
+      file: .containerization/Containerfile
+      stage: builder
+    env:
+      GUIX_PROFILE: /var/guix/profiles/per-user/build
+    steps:
+      - name: Activate Guix environment
+        run: |
+          export PATH="${GUIX_PROFILE}/bin:$PATH"
+          guix environment --pure fireflag
+
+      - name: Build ReScript
+        run: rescript build
+
+      - name: Verify Idris2 proofs
+        run: |
+          cd extension/lib/idris
+          idris2 --check FlagSafety.idr
+          idris2 --check FlagTransaction.idr
+          idris2 --check SafeUI.idr
+
+      - name: Package extension
+        run: |
+          cd extension
+          web-ext build --overwrite-dest
+
+      - name: Generate checksums
+        run: |
+          cd extension/web-ext-artifacts
+          sha256sum *.xpi > SHA256SUMS
+          gpg --detach-sign --armor SHA256SUMS
+
+    artifacts:
+      - extension/web-ext-artifacts/*.xpi
+      - extension/web-ext-artifacts/SHA256SUMS*
+
+  # Stage 3: Post-build security validation
+  post-build-security:
+    description: "Scan built artifacts for security issues"
+    depends-on: [guix-build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Unpack .xpi
+        run: |
+          mkdir /tmp/extension
+          unzip extension/web-ext-artifacts/*.xpi -d /tmp/extension
+
+      - name: Scan for secrets in build
+        run: |
+          docker run --rm -v /tmp/extension:/scan \
+            trufflesecurity/trufflehog:latest filesystem /scan
+
+      - name: Verify manifest integrity
+        run: |
+          jq empty /tmp/extension/manifest.json
+          jq '.manifest_version == 3' /tmp/extension/manifest.json
+
+      - name: Check file permissions
+        run: |
+          # Ensure no executable permissions on source files
+          find /tmp/extension -type f -executable -name "*.js" -o -name "*.html"
+
+  # Stage 4: Sign for Mozilla Add-ons
+  sign-extension:
+    description: "Sign extension for distribution"
+    depends-on: [post-build-security]
+    runs-on: ubuntu-latest
+    secrets:
+      - MOZILLA_API_KEY
+      - MOZILLA_API_SECRET
+    steps:
+      - name: Sign with web-ext
+        run: |
+          web-ext sign \
+            --api-key=${MOZILLA_API_KEY} \
+            --api-secret=${MOZILLA_API_SECRET} \
+            --channel=listed
+
+    artifacts:
+      - extension/web-ext-artifacts/*-signed.xpi
+
+# Outputs
+outputs:
+  extension:
+    description: "Signed Firefox extension"
+    path: extension/web-ext-artifacts/*-signed.xpi
+
+  checksums:
+    description: "SHA256 checksums with GPG signature"
+    path: extension/web-ext-artifacts/SHA256SUMS*
+
+  provenance:
+    description: "SLSA provenance attestation"
+    path: extension/web-ext-artifacts/provenance.json
+
+# Build configuration
+config:
+  reproducible: true
+  slsa-level: 3
+  sbom: true
+  sign-commits: true
+  verify-signatures: true

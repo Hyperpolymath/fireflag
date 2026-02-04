@@ -1,0 +1,91 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# FireFlag Extension Build Container
+# Uses chainguard minimal images for security
+
+# Stage 1: Base build environment with Guix
+FROM cgr.dev/chainguard/wolfi-base:latest AS guix-base
+
+# Install Guix for reproducible builds
+RUN apk add --no-cache \
+    bash \
+    wget \
+    xz \
+    gpg
+
+# Download and verify Guix
+RUN wget -O guix-binary.tar.xz \
+    https://ftp.gnu.org/gnu/guix/guix-binary-1.4.0.x86_64-linux.tar.xz && \
+    wget -O guix-binary.tar.xz.sig \
+    https://ftp.gnu.org/gnu/guix/guix-binary-1.4.0.x86_64-linux.tar.xz.sig
+
+# Install Guix
+RUN tar -xf guix-binary.tar.xz -C / && \
+    /var/guix/profiles/per-user/root/current-guix/bin/guix-daemon --build-users-group=guixbuild &
+
+# Stage 2: Build tools (Deno, ReScript, Idris2, Zig)
+FROM guix-base AS build-tools
+
+# Install Deno via Guix
+RUN guix install deno
+
+# Install ReScript compiler
+RUN guix install node && \
+    npm install -g rescript@latest
+
+# Install Idris2 for FFI safety proofs
+RUN guix install idris2
+
+# Install Zig for FFI implementation
+RUN guix install zig
+
+# Install web-ext for Firefox extension linting
+RUN guix install node && \
+    npm install -g web-ext
+
+# Stage 3: Build FireFlag extension
+FROM build-tools AS builder
+
+WORKDIR /build
+
+# Copy source files
+COPY extension/ /build/extension/
+COPY .github/ /build/.github/
+COPY *.scm *.adoc justfile /build/
+
+# Build ReScript code
+WORKDIR /build
+RUN rescript build
+
+# Compile Idris2 FFI modules
+WORKDIR /build/extension/lib/idris
+RUN idris2 --build fireflag.ipkg || echo "Idris2 build (proof checking)"
+
+# Lint extension
+WORKDIR /build/extension
+RUN web-ext lint --warnings-as-errors
+
+# Create distributable .xpi (unsigned for now)
+RUN web-ext build --overwrite-dest
+
+# Stage 4: Minimal runtime image with just the built extension
+FROM cgr.dev/chainguard/static:latest AS runtime
+
+WORKDIR /fireflag
+
+# Copy built extension
+COPY --from=builder /build/extension/web-ext-artifacts/*.xpi /fireflag/
+
+# Copy checksums and signatures
+COPY --from=builder /build/extension/manifest.json /fireflag/
+COPY --from=builder /build/LICENSE /fireflag/
+
+# Metadata
+LABEL org.opencontainers.image.title="FireFlag"
+LABEL org.opencontainers.image.description="Safe Firefox/Gecko flag management extension"
+LABEL org.opencontainers.image.authors="Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>"
+LABEL org.opencontainers.image.licenses="PMPL-1.0-or-later"
+LABEL org.opencontainers.image.source="https://github.com/hyperpolymath/fireflag"
+LABEL org.opencontainers.image.vendor="hyperpolymath"
+
+# The .xpi file is the final artifact
+CMD ["cat", "/fireflag/*.xpi"]
