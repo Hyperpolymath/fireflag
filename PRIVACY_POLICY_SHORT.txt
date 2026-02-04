@@ -1,0 +1,52 @@
+PRIVACY POLICY - FireFlag Browser Extension
+
+FireFlag collects ZERO personal data.
+
+DATA COLLECTION: None
+- No personal information
+- No browsing history
+- No website content
+- No analytics or telemetry
+- No error reports
+- No tracking
+
+DATA STORAGE: Local Only
+- All flag data stored locally on your device using browser.storage.local
+- Never transmitted to any server
+- Never shared with third parties
+- Deleted when you uninstall the extension
+
+NETWORK ACTIVITY: None
+- Zero network requests
+- No external API calls
+- Works completely offline
+
+PERMISSIONS:
+- storage: Store flag data locally on your device
+- browserSettings (optional): View browser experimental features
+- privacy (optional): Access privacy-related settings
+- tabs (optional): DevTools integration
+- notifications (optional): Alert for dangerous flags
+- downloads (optional): Export flag data to files
+
+THIRD-PARTY SERVICES: None
+- No analytics (Google Analytics, etc.)
+- No error tracking (Sentry, etc.)
+- No CDNs or external services
+- All code runs locally
+
+COMPLIANCE:
+- GDPR compliant
+- CCPA compliant
+- Mozilla Add-on Policies compliant
+
+TRANSPARENCY:
+- Open source: github.com/hyperpolymath/fireflag
+- Auditable code
+- Formally verified core components
+
+CONTACT: jonathan.jewell@open.ac.uk
+
+Full policy: https://github.com/hyperpolymath/fireflag/blob/main/PRIVACY_POLICY.md
+
+Last Updated: February 4, 2026
