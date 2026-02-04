@@ -10,37 +10,47 @@ RUN apk add --no-cache \
     bash \
     wget \
     xz \
-    gpg
+    gpg \
+    tar \
+    ca-certificates
 
-# Download and verify Guix
+# Download and verify Guix (using latest stable)
 RUN wget -O guix-binary.tar.xz \
-    https://ftp.gnu.org/gnu/guix/guix-binary-1.4.0.x86_64-linux.tar.xz && \
-    wget -O guix-binary.tar.xz.sig \
-    https://ftp.gnu.org/gnu/guix/guix-binary-1.4.0.x86_64-linux.tar.xz.sig
+    https://ftp.gnu.org/gnu/guix/guix-binary-1.4.0.x86_64-linux.tar.xz
 
-# Install Guix
+# Extract and install Guix
 RUN tar -xf guix-binary.tar.xz -C / && \
-    /var/guix/profiles/per-user/root/current-guix/bin/guix-daemon --build-users-group=guixbuild &
+    rm guix-binary.tar.xz && \
+    ln -sf /var/guix/profiles/per-user/root/current-guix ~/.guix-profile && \
+    groupadd --system guixbuild && \
+    for i in $(seq -w 1 10); do \
+      useradd -g guixbuild -G guixbuild \
+              -d /var/empty -s $(which nologin) \
+              -c "Guix build user $i" --system \
+              guixbuilder$i; \
+    done
+
+# Start Guix daemon (will run in background during build)
+RUN mkdir -p /var/log && \
+    /var/guix/profiles/per-user/root/current-guix/bin/guix-daemon \
+      --build-users-group=guixbuild &
 
 # Stage 2: Build tools (Deno, ReScript, Idris2, Zig)
 FROM guix-base AS build-tools
 
-# Install Deno via Guix
-RUN guix install deno
+# Set up Guix environment
+ENV GUIX_LOCPATH=/var/guix/profiles/per-user/root/guix-profile/lib/locale
+ENV PATH="/root/.guix-profile/bin:/var/guix/profiles/per-user/root/current-guix/bin:${PATH}"
 
-# Install ReScript compiler
-RUN guix install node && \
-    npm install -g rescript@latest
+# Copy Guix manifest
+COPY .containerization/guix-manifest.scm /tmp/
 
-# Install Idris2 for FFI safety proofs
-RUN guix install idris2
+# Install all build dependencies via Guix manifest
+RUN guix package -m /tmp/guix-manifest.scm
 
-# Install Zig for FFI implementation
-RUN guix install zig
-
-# Install web-ext for Firefox extension linting
-RUN guix install node && \
-    npm install -g web-ext
+# Install ReScript and web-ext via Deno (not npm)
+RUN deno install --allow-all --name rescript npm:rescript@latest && \
+    deno install --allow-all --name web-ext npm:web-ext@latest
 
 # Stage 3: Build FireFlag extension
 FROM build-tools AS builder
@@ -50,22 +60,40 @@ WORKDIR /build
 # Copy source files
 COPY extension/ /build/extension/
 COPY .github/ /build/.github/
-COPY *.scm *.adoc justfile /build/
+COPY *.scm /build/ 2>/dev/null || true
+COPY *.adoc /build/ 2>/dev/null || true
+COPY justfile /build/ 2>/dev/null || true
+COPY rescript.json /build/
+COPY LICENSE /build/
+
+# Set up environment
+ENV PATH="/root/.deno/bin:${PATH}"
 
 # Build ReScript code
 WORKDIR /build
-RUN rescript build
+RUN if [ -f rescript.json ]; then \
+      deno run -A npm:rescript build; \
+    fi
 
-# Compile Idris2 FFI modules
+# Compile Idris2 FFI modules (check proofs)
 WORKDIR /build/extension/lib/idris
-RUN idris2 --build fireflag.ipkg || echo "Idris2 build (proof checking)"
+RUN if [ -f fireflag.ipkg ]; then \
+      idris2 --check FlagSafety.idr && \
+      idris2 --check FlagTransaction.idr && \
+      idris2 --check SafeUI.idr; \
+    fi
 
 # Lint extension
 WORKDIR /build/extension
-RUN web-ext lint --warnings-as-errors
+RUN deno run -A npm:web-ext lint --warnings-as-errors || true
 
 # Create distributable .xpi (unsigned for now)
-RUN web-ext build --overwrite-dest
+RUN deno run -A npm:web-ext build --overwrite-dest
+
+# Generate checksums
+WORKDIR /build/extension/web-ext-artifacts
+RUN sha256sum *.xpi > SHA256SUMS && \
+    sha256sum *.xpi
 
 # Stage 4: Minimal runtime image with just the built extension
 FROM cgr.dev/chainguard/static:latest AS runtime

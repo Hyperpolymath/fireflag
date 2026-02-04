@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "Manage Firefox and Gecko browser flags safely - experiment with about:config and experimental features with confidence",
   "author": "Jonathan D.A. Jewell <jonathan.jewell@open.ac.uk>",
+  "homepage_url": "https://github.com/hyperpolymath/fireflag",
 
   "icons": {
     "16": "icons/fireflag-16.png",
@@ -51,8 +52,7 @@
   },
 
   "options_ui": {
-    "page": "options/options.html",
-    "browser_style": true
+    "page": "options/options.html"
   },
 
   "devtools_page": "devtools/devtools.html",
@@ -60,7 +60,7 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "fireflag@hyperpolymath.org",
-      "strict_min_version": "109.0"
+      "strict_min_version": "112.0"
     }
   },
 

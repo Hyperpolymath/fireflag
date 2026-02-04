@@ -1,0 +1,106 @@
+<svg width="1280" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .sidebar { fill: #f9f9fa; }
+      .text { font-family: system-ui, -apple-system, sans-serif; fill: #333; }
+      .header { fill: #0060df; }
+      .card { fill: #ffffff; stroke: #d7d7db; stroke-width: 1; }
+      .section-active { fill: #e0e0e0; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="800" class="bg"/>
+
+  <!-- Sidebar -->
+  <rect width="250" height="800" class="sidebar"/>
+
+  <!-- Header in sidebar -->
+  <text x="20" y="40" class="text" font-size="20" font-weight="bold">FireFlag Settings</text>
+
+  <!-- Navigation -->
+  <g transform="translate(20, 80)">
+    <rect width="210" height="40" rx="4" class="section-active"/>
+    <text x="15" y="25" class="text" font-size="13">⚙ General</text>
+
+    <text x="15" y="70" class="text" font-size="13" opacity="0.6">📊 Tracking</text>
+    <text x="15" y="110" class="text" font-size="13" opacity="0.6">🔐 Permissions</text>
+    <text x="15" y="150" class="text" font-size="13" opacity="0.6">🔧 Advanced</text>
+    <text x="15" y="190" class="text" font-size="13" opacity="0.6">ℹ About</text>
+  </g>
+
+  <!-- Main content area -->
+  <g transform="translate(270, 0)">
+    <!-- Page header -->
+    <text x="30" y="50" class="text" font-size="24" font-weight="bold">General Settings</text>
+
+    <!-- Auto-update section -->
+    <g transform="translate(30, 90)">
+      <rect width="950" height="140" rx="8" class="card"/>
+
+      <text x="20" y="30" class="text" font-size="16" font-weight="600">Auto-Update</text>
+      <text x="20" y="50" class="text" font-size="12" opacity="0.7">Keep flag database current with Mozilla changes</text>
+
+      <g transform="translate(20, 70)">
+        <rect width="20" height="20" rx="4" fill="#0060df"/>
+        <text x="3" y="15" fill="#fff" font-size="14">✓</text>
+        <text x="30" y="15" class="text" font-size="13">Enable automatic database updates</text>
+      </g>
+
+      <text x="50" y="105" class="text" font-size="11" opacity="0.6">Check for updates: Weekly</text>
+      <text x="50" y="122" class="text" font-size="11" opacity="0.6">Last update: 2026-02-04 14:30 UTC</text>
+    </g>
+
+    <!-- UI Preferences section -->
+    <g transform="translate(30, 250)">
+      <rect width="950" height="200" rx="8" class="card"/>
+
+      <text x="20" y="30" class="text" font-size="16" font-weight="600">User Interface</text>
+      <text x="20" y="50" class="text" font-size="12" opacity="0.7">Customize how FireFlag appears</text>
+
+      <g transform="translate(20, 70)">
+        <rect width="20" height="20" rx="4" fill="#0060df"/>
+        <text x="3" y="15" fill="#fff" font-size="14">✓</text>
+        <text x="30" y="15" class="text" font-size="13">Show safety badges</text>
+      </g>
+
+      <g transform="translate(20, 105)">
+        <rect width="20" height="20" rx="4" fill="#0060df"/>
+        <text x="3" y="15" fill="#fff" font-size="14">✓</text>
+        <text x="30" y="15" class="text" font-size="13">Display flag effects inline</text>
+      </g>
+
+      <g transform="translate(20, 140)">
+        <rect width="20" height="20" rx="4" stroke="#d7d7db" stroke-width="1" fill="#fff"/>
+        <text x="30" y="15" class="text" font-size="13">Compact view mode</text>
+      </g>
+    </g>
+
+    <!-- Search preferences -->
+    <g transform="translate(30, 470)">
+      <rect width="950" height="140" rx="8" class="card"/>
+
+      <text x="20" y="30" class="text" font-size="16" font-weight="600">Search & Filtering</text>
+      <text x="20" y="50" class="text" font-size="12" opacity="0.7">Control search behavior</text>
+
+      <g transform="translate(20, 70)">
+        <rect width="20" height="20" rx="4" fill="#0060df"/>
+        <text x="3" y="15" fill="#fff" font-size="14">✓</text>
+        <text x="30" y="15" class="text" font-size="13">Search flag keys</text>
+      </g>
+
+      <g transform="translate(20, 105)">
+        <rect width="20" height="20" rx="4" fill="#0060df"/>
+        <text x="3" y="15" fill="#fff" font-size="14">✓</text>
+        <text x="30" y="15" class="text" font-size="13">Search descriptions and effects</text>
+      </g>
+    </g>
+
+    <!-- Save button -->
+    <g transform="translate(30, 640)">
+      <rect width="120" height="40" rx="6" fill="#0060df"/>
+      <text x="60" y="26" class="text" fill="#fff" font-size="14" font-weight="600" text-anchor="middle">Save Settings</text>
+    </g>
+  </g>
+</svg>

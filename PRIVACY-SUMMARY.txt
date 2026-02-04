@@ -1,0 +1,56 @@
+FireFlag Privacy Policy Summary
+================================
+
+PRIVACY-FIRST EXTENSION - NO DATA COLLECTION
+
+What We DON'T Collect:
+• No personal information (name, email, IP address)
+• No browsing history or website URLs
+• No analytics, telemetry, or tracking
+• No crash reports or error logs
+• No data sent to external servers (except database updates)
+
+What's Stored Locally (On Your Device):
+• Flag states (which flags you've enabled/disabled)
+• User preferences (settings, UI options)
+• Change history (if tracking enabled)
+• Flag database (105+ Firefox flags with metadata)
+
+All data stored using Firefox's browser.storage API - stays on your device only.
+
+Network Activity:
+• Weekly database update checks from GitHub (optional, can be disabled)
+• Standard Firefox extension updates from Mozilla Add-ons
+• No third-party services, analytics, or tracking
+
+Your Rights:
+• View all data: DevTools → Storage → Extension Storage
+• Export data: JSON/CSV format
+• Delete data: Settings → Clear All Data
+• Complete removal: Uninstall extension
+
+GDPR/CCPA Compliant:
+• No personal data processing
+• All storage is local and user-initiated
+• Full transparency and control
+• No consent required (no personal data collected)
+
+Open Source:
+• Full source code: https://github.com/hyperpolymath/fireflag
+• Auditable and verifiable
+• Reproducible builds
+• License: MPL-2.0
+
+Contact:
+• Developer: Jonathan D.A. Jewell
+• Email: jonathan.jewell@open.ac.uk
+• Issues: https://github.com/hyperpolymath/fireflag/issues
+
+Full Privacy Policy: https://github.com/hyperpolymath/fireflag/blob/main/PRIVACY.md
+
+Last Updated: February 4, 2026
+Version: 1.0.0
+
+---
+
+TL;DR: FireFlag stores everything locally on your device. We don't collect, transmit, or share any personal information. No analytics, no tracking, no telemetry. Ever.

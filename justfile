@@ -72,19 +72,44 @@ sign-ext KEY SECRET:
 # Containerization tasks
 # -----------------------
 
-# Build in Guix environment
+# Build in Guix environment (local)
 guix-build:
     guix shell -m .containerization/guix-manifest.scm -- \
-        bash -c "rescript build && cd extension && npx web-ext build"
+        bash -c "deno run -A npm:rescript build && cd extension && deno run -A npm:web-ext build"
 
-# Build with Docker/Podman
+# Build using Guix package definition
+guix-package:
+    guix build -f guix.scm
+
+# Build with Docker/Podman (simple)
 container-build:
     podman build -f .containerization/Containerfile -t fireflag:latest .
 
-# Run cerro-terro orchestration
+# Build with complete orchestration (recommended)
+container-build-full:
+    @echo "Running full containerized build with security scanning..."
+    bash .containerization/build.sh
+
+# Build and extract artifacts
+container-extract:
+    @echo "Building and extracting artifacts..."
+    BUILD_TAG=fireflag:build bash .containerization/build.sh
+    @echo "Artifacts available in build-output/"
+
+# Clean container build artifacts
+container-clean:
+    rm -rf build-output/
+    podman rmi fireflag:latest fireflag:build 2>/dev/null || true
+    @echo "Container artifacts cleaned"
+
+# Run cerro-terro orchestration (if cerro-terro installed)
 cerro-build:
-    @echo "Running cerro-terro build orchestration..."
-    @echo "See .containerization/cerro-terro.yml for stages"
+    @if command -v cerro-terro >/dev/null 2>&1; then \
+        cerro-terro run .containerization/cerro-terro.yml; \
+    else \
+        echo "cerro-terro not installed, using build.sh instead"; \
+        bash .containerization/build.sh; \
+    fi
 
 # Security scanning tasks
 # ------------------------
@@ -103,6 +128,28 @@ check-proofs:
     cd extension/lib/idris && idris2 --check FlagSafety.idr
     cd extension/lib/idris && idris2 --check FlagTransaction.idr
     cd extension/lib/idris && idris2 --check SafeUI.idr
+
+# Screenshots
+# -----------
+
+# Generate SVG mockup screenshots
+generate-mockups:
+    bash .screenshots/generate-mockups.sh
+
+# Capture real screenshots (automated with prompts)
+capture-screenshots:
+    deno run --allow-all .screenshots/capture-screenshots.js
+
+# Optimize screenshot images
+optimize-screenshots:
+    @echo "Optimizing screenshots..."
+    @for img in .screenshots/*.png; do \
+        if [ -f "$$img" ]; then \
+            convert "$$img" -resize '1280x800>' -quality 85 "$$img"; \
+            echo "  ✓ $$(basename $$img)"; \
+        fi \
+    done
+    @echo "✓ Screenshots optimized"
 
 # Full build pipeline
 # --------------------

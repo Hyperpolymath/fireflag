@@ -1,0 +1,165 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+name: Update Flag Database
+
+# Runs weekly to detect Mozilla flag changes
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Weekly on Sunday
+  workflow_dispatch: # Manual trigger
+  pull_request:
+    paths:
+      - 'extension/data/flags-database.json'
+
+permissions: read-all
+
+jobs:
+  detect-mozilla-changes:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@5e01c016a857a4dbb5afe9d0f9733cd472cba985 # v2
+        with:
+          deno-version: v2.x
+
+      - name: Fetch Firefox source preferences
+        run: |
+          # Download Firefox source to check for new/changed prefs
+          wget https://hg.mozilla.org/mozilla-central/raw-file/tip/modules/libpref/init/all.js \
+            -O /tmp/firefox-prefs.js
+
+          wget https://hg.mozilla.org/mozilla-central/raw-file/tip/modules/libpref/init/StaticPrefList.yaml \
+            -O /tmp/firefox-static-prefs.yaml
+
+      - name: Compare with current database
+        id: compare
+        run: |
+          # Extract flag keys from current database
+          jq -r '.flags[].key' extension/data/flags-database.json > /tmp/current-flags.txt
+
+          # Parse Firefox prefs and find new ones
+          # (This is a simplified check - full implementation would parse YAML/JS properly)
+          grep -oP '(?<=pref\(")[\w\.]+"(?=,)' /tmp/firefox-prefs.js | tr -d '"' > /tmp/firefox-flags.txt || true
+
+          # Find new flags (in Firefox but not in our database)
+          comm -13 <(sort /tmp/current-flags.txt) <(sort /tmp/firefox-flags.txt) > /tmp/new-flags.txt
+
+          # Find removed flags (in our database but not in Firefox)
+          comm -23 <(sort /tmp/current-flags.txt) <(sort /tmp/firefox-flags.txt) > /tmp/removed-flags.txt
+
+          NEW_COUNT=$(wc -l < /tmp/new-flags.txt)
+          REMOVED_COUNT=$(wc -l < /tmp/removed-flags.txt)
+
+          echo "new_flags=$NEW_COUNT" >> $GITHUB_OUTPUT
+          echo "removed_flags=$REMOVED_COUNT" >> $GITHUB_OUTPUT
+
+          if [ $NEW_COUNT -gt 0 ] || [ $REMOVED_COUNT -gt 0 ]; then
+            echo "changes_detected=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes_detected=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create issue for new flags
+        if: steps.compare.outputs.changes_detected == 'true'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            const newFlags = ${{ steps.compare.outputs.new_flags }};
+            const removedFlags = ${{ steps.compare.outputs.removed_flags }};
+
+            const body = `## Firefox Flag Database Update Needed
+
+            **New flags detected:** ${newFlags}
+            **Removed/deprecated flags:** ${removedFlags}
+
+            ### New Flags
+            \`\`\`
+            ${require('fs').readFileSync('/tmp/new-flags.txt', 'utf8')}
+            \`\`\`
+
+            ### Removed Flags
+            \`\`\`
+            ${require('fs').readFileSync('/tmp/removed-flags.txt', 'utf8')}
+            \`\`\`
+
+            ### Action Required
+            - [ ] Research each new flag
+            - [ ] Classify safety level (safe/experimental/dangerous)
+            - [ ] Document effects (positive/negative/interesting)
+            - [ ] Add to extension/data/flags-database.json
+            - [ ] Mark removed flags with geckoMaxVersion
+            - [ ] Update documentation
+
+            ### References
+            - Firefox source: https://hg.mozilla.org/mozilla-central/file/tip/modules/libpref/init/
+            - Bugzilla: https://bugzilla.mozilla.org
+            - MDN: https://developer.mozilla.org
+            `;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Auto] Firefox flags changed: +${newFlags} -${removedFlags}`,
+              body: body,
+              labels: ['flag-database', 'automated', 'needs-review']
+            });
+
+      - name: Validate current database schema
+        run: |
+          # Validate JSON schema
+          npx ajv-cli validate \
+            -s extension/data/flags-schema.json \
+            -d extension/data/flags-database.json
+
+      - name: Check for community contributions
+        run: |
+          # Check if this is a PR adding/modifying flags
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Reviewing community flag contribution..."
+
+            # Validate the PR changes the database correctly
+            git diff origin/main extension/data/flags-database.json
+
+            # TODO: Add automated validation:
+            # - Schema compliance
+            # - Safety level justification
+            # - Documentation links present
+            # - No duplicate keys
+          fi
+
+  version-compatibility-check:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        firefox-version: ['109', '115', '120', '125', 'nightly']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+
+      - name: Test Firefox ${{ matrix.firefox-version }}
+        run: |
+          # Check which flags are valid for this Firefox version
+          jq --arg ver "${{ matrix.firefox-version }}.0" '
+            .flags[] |
+            select(
+              (.geckoMinVersion // "0.0") <= $ver and
+              ((.geckoMaxVersion // "999.0") >= $ver or .geckoMaxVersion == null)
+            ) |
+            .key
+          ' extension/data/flags-database.json > flags-for-${{ matrix.firefox-version }}.txt
+
+          COUNT=$(wc -l < flags-for-${{ matrix.firefox-version }}.txt)
+          echo "Firefox ${{ matrix.firefox-version }}: $COUNT compatible flags"
+
+      - name: Upload compatibility report
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8 # v4
+        with:
+          name: compatibility-firefox-${{ matrix.firefox-version }}
+          path: flags-for-${{ matrix.firefox-version }}.txt

@@ -1,0 +1,2721 @@
+{
+  "$schema": "./flags-schema.json",
+  "version": "1.0.0",
+  "lastUpdated": "2026-02-04T14:30:00Z",
+  "categories": {
+    "privacy": {
+      "name": "Privacy & Security",
+      "description": "Flags that affect privacy, tracking, and security features"
+    },
+    "performance": {
+      "name": "Performance",
+      "description": "Flags that affect browser performance and resource usage"
+    },
+    "experimental": {
+      "name": "Experimental Features",
+      "description": "New features under development"
+    },
+    "developer": {
+      "name": "Developer Tools",
+      "description": "Flags for debugging and development"
+    },
+    "ui": {
+      "name": "User Interface",
+      "description": "Flags that change the browser UI"
+    },
+    "network": {
+      "name": "Network & Connectivity",
+      "description": "Flags affecting network behavior"
+    },
+    "media": {
+      "name": "Media & Graphics",
+      "description": "Audio, video, and graphics rendering flags"
+    },
+    "accessibility": {
+      "name": "Accessibility",
+      "description": "Accessibility and assistive technology flags"
+    }
+  },
+  "flags": [
+    {
+      "key": "privacy.resistFingerprinting",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Enable fingerprinting resistance to make browser tracking harder",
+      "effects": {
+        "positive": [
+          "Reduces browser fingerprinting",
+          "Enhances privacy against tracking",
+          "Spoofs timezone to UTC",
+          "Reports generic screen resolution"
+        ],
+        "negative": [
+          "May break websites relying on accurate timezone",
+          "Can affect canvas-based visualizations",
+          "Some web apps may malfunction"
+        ],
+        "interesting": [
+          "Part of Tor Browser's privacy model",
+          "Randomizes canvas data",
+          "Limits high-resolution timers"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "58.0",
+      "documentation": "https://wiki.mozilla.org/Security/Fingerprinting"
+    },
+    {
+      "key": "privacy.trackingprotection.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Enhanced Tracking Protection",
+      "effects": {
+        "positive": [
+          "Blocks known trackers",
+          "Reduces cross-site tracking",
+          "Faster page loads (fewer resources)",
+          "Lower bandwidth usage"
+        ],
+        "negative": [
+          "May break some login flows",
+          "Can interfere with social media widgets"
+        ],
+        "interesting": [
+          "Uses Disconnect.me lists",
+          "Updates automatically",
+          "Strict mode available separately"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "42.0",
+      "documentation": "https://support.mozilla.org/kb/enhanced-tracking-protection-firefox-desktop"
+    },
+    {
+      "key": "privacy.donottrackheader.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Send Do Not Track header with all requests",
+      "effects": {
+        "positive": [
+          "Signals privacy preference to websites",
+          "May reduce some tracking"
+        ],
+        "negative": [
+          "Most sites ignore DNT header",
+          "Can make you more fingerprintable (fewer users enable it)"
+        ],
+        "interesting": [
+          "Voluntary compliance only",
+          "Being phased out in favor of GPC",
+          "Legal significance in some jurisdictions"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "4.0"
+    },
+    {
+      "key": "privacy.firstparty.isolate",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Isolate cookies and storage by first-party domain (like Tor Browser)",
+      "effects": {
+        "positive": [
+          "Prevents cross-site tracking via cookies",
+          "Stronger privacy protection",
+          "Each domain gets separate storage"
+        ],
+        "negative": [
+          "Breaks many websites",
+          "Logout from one site doesn't affect others",
+          "Social login flows often fail",
+          "CDN resources may load multiple times"
+        ],
+        "interesting": [
+          "Core feature of Tor Browser",
+          "Similar to Total Cookie Protection",
+          "Can cause significant breakage"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "52.0",
+      "documentation": "https://wiki.mozilla.org/Security/FirstPartyIsolation"
+    },
+    {
+      "key": "privacy.clearOnShutdown.cache",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Clear cache when Firefox closes",
+      "effects": {
+        "positive": [
+          "No persistent cache forensics",
+          "Fresh state on each launch"
+        ],
+        "negative": [
+          "Slower startup and page loads",
+          "Higher bandwidth usage",
+          "Websites reload all resources"
+        ],
+        "interesting": [
+          "Part of private browsing workflow",
+          "Can combine with other clearOnShutdown flags"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.tabs.drawInTitlebar",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Draw tabs in the title bar area",
+      "effects": {
+        "positive": [
+          "More vertical screen space",
+          "Modern UI appearance"
+        ],
+        "negative": [
+          "No traditional window title",
+          "May conflict with window manager themes"
+        ],
+        "interesting": [
+          "Affects Linux tiling WM behavior",
+          "Different behavior on macOS",
+          "Changes window drag zones"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "4.0"
+    },
+    {
+      "key": "browser.tabs.tabMinWidth",
+      "type": "integer",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": 76,
+      "description": "Minimum width of tabs in pixels",
+      "effects": {
+        "positive": [
+          "Customize tab display density",
+          "More tabs visible with lower value"
+        ],
+        "negative": [
+          "Too small makes tabs hard to click",
+          "Tab titles become unreadable"
+        ],
+        "interesting": [
+          "Range: 50-250 recommended",
+          "Affects favicon visibility",
+          "Interacts with tab scrolling behavior"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.urlbar.suggest.quicksuggest.sponsored",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Show sponsored suggestions in address bar",
+      "effects": {
+        "positive": [
+          "Helps fund Firefox development"
+        ],
+        "negative": [
+          "Sends keystrokes to third parties",
+          "Privacy concerns",
+          "Clutters address bar"
+        ],
+        "interesting": [
+          "Controversial feature",
+          "Opt-in in most regions",
+          "Can be fully disabled"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "92.0"
+    },
+    {
+      "key": "network.http.http3.enable",
+      "type": "boolean",
+      "category": "network",
+      "safetyLevel": "experimental",
+      "defaultValue": true,
+      "description": "Enable HTTP/3 protocol support (QUIC transport)",
+      "effects": {
+        "positive": [
+          "Faster page loads on supported servers",
+          "Better performance on poor connections",
+          "Reduced latency",
+          "Improved mobile performance"
+        ],
+        "negative": [
+          "May have compatibility issues with some CDNs",
+          "Higher CPU usage during handshake",
+          "Some corporate firewalls block UDP"
+        ],
+        "interesting": [
+          "Uses UDP instead of TCP",
+          "Includes TLS 1.3 natively",
+          "Reduces head-of-line blocking",
+          "IETF standard RFC 9114"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "88.0",
+      "documentation": "https://datatracker.ietf.org/doc/html/rfc9114"
+    },
+    {
+      "key": "network.dns.disablePrefetch",
+      "type": "boolean",
+      "category": "network",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Disable DNS prefetching for links on pages",
+      "effects": {
+        "positive": [
+          "Reduces DNS queries (privacy)",
+          "Prevents preemptive connections"
+        ],
+        "negative": [
+          "Slower navigation to linked pages",
+          "More perceived latency on clicks"
+        ],
+        "interesting": [
+          "Privacy vs performance tradeoff",
+          "Affects link hover behavior",
+          "Can leak browsing intent"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "3.0"
+    },
+    {
+      "key": "network.predictor.enabled",
+      "type": "boolean",
+      "category": "network",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable network predictor (learns and preloads resources)",
+      "effects": {
+        "positive": [
+          "Faster page loads on frequently visited sites",
+          "Preconnects to likely destinations"
+        ],
+        "negative": [
+          "Privacy concern (predicts behavior)",
+          "Wastes bandwidth on wrong predictions",
+          "More background network activity"
+        ],
+        "interesting": [
+          "Machine learning based",
+          "Stores local database",
+          "Works with prefetch"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "36.0"
+    },
+    {
+      "key": "network.http.referer.XOriginPolicy",
+      "type": "integer",
+      "category": "privacy",
+      "safetyLevel": "experimental",
+      "defaultValue": 0,
+      "description": "Control when Referer header is sent cross-origin (0=always, 1=same-base-domain, 2=same-host)",
+      "effects": {
+        "positive": [
+          "Reduces referer leakage (privacy)",
+          "Prevents tracking via referer"
+        ],
+        "negative": [
+          "May break some analytics",
+          "CSRF protection might fail",
+          "Login flows can break"
+        ],
+        "interesting": [
+          "Value 2 provides strongest privacy",
+          "Interacts with other referer settings",
+          "Standard Referer-Policy header preferred"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "36.0"
+    },
+    {
+      "key": "layout.css.grid.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable CSS Grid Layout support",
+      "effects": {
+        "positive": [
+          "Modern CSS layout capabilities",
+          "Better responsive design support",
+          "Industry standard feature"
+        ],
+        "negative": [],
+        "interesting": [
+          "Required for modern web development",
+          "Widely supported across browsers",
+          "W3C standard"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "52.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout"
+    },
+    {
+      "key": "layout.css.backdrop-filter.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable CSS backdrop-filter property (blur/effects behind elements)",
+      "effects": {
+        "positive": [
+          "Modern UI effects (frosted glass)",
+          "Better visual design options"
+        ],
+        "negative": [
+          "Performance impact on low-end GPUs",
+          "Can slow down scrolling"
+        ],
+        "interesting": [
+          "GPU-accelerated when available",
+          "Popular in modern web design",
+          "Similar to iOS blur effects"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "103.0"
+    },
+    {
+      "key": "devtools.chrome.enabled",
+      "type": "boolean",
+      "category": "developer",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Enable browser chrome debugging (inspect Firefox's own UI)",
+      "effects": {
+        "positive": [
+          "Debug Firefox's internal UI",
+          "Essential for extension development",
+          "Inspect browser chrome elements"
+        ],
+        "negative": [
+          "Potential security risk if misused",
+          "Can expose internal APIs"
+        ],
+        "interesting": [
+          "Allows debugging the browser itself",
+          "Opens remote debugging capabilities",
+          "Required for XUL/chrome development"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "devtools.debugger.remote-enabled",
+      "type": "boolean",
+      "category": "developer",
+      "safetyLevel": "dangerous",
+      "defaultValue": false,
+      "description": "Enable remote debugging protocol",
+      "effects": {
+        "positive": [
+          "Debug from another machine",
+          "Mobile debugging capability",
+          "Automated testing tools"
+        ],
+        "negative": [
+          "MAJOR SECURITY RISK if exposed",
+          "Full browser control remotely",
+          "Can execute arbitrary code"
+        ],
+        "interesting": [
+          "Used by development tools",
+          "Requires authentication in newer versions",
+          "Network accessible"
+        ]
+      },
+      "permissions": ["browserSettings"],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "gfx.webrender.all",
+      "type": "boolean",
+      "category": "performance",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Force WebRender on all windows (GPU-accelerated rendering)",
+      "effects": {
+        "positive": [
+          "Potentially faster rendering",
+          "Better GPU utilization",
+          "Smoother animations",
+          "Lower CPU usage"
+        ],
+        "negative": [
+          "May cause graphical glitches on some GPUs",
+          "Higher GPU memory usage",
+          "Driver compatibility issues",
+          "Not all GPUs benefit"
+        ],
+        "interesting": [
+          "Written in Rust",
+          "Part of Servo project",
+          "Now default on most platforms",
+          "GPU rendering pipeline"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "67.0",
+      "documentation": "https://wiki.mozilla.org/Platform/GFX/WebRender"
+    },
+    {
+      "key": "gfx.canvas.accelerated",
+      "type": "boolean",
+      "category": "performance",
+      "safetyLevel": "experimental",
+      "defaultValue": true,
+      "description": "Enable GPU acceleration for Canvas 2D API",
+      "effects": {
+        "positive": [
+          "Faster canvas rendering",
+          "Better for games and visualizations",
+          "Smoother animations"
+        ],
+        "negative": [
+          "Can cause rendering bugs",
+          "Higher GPU memory usage",
+          "Driver compatibility issues"
+        ],
+        "interesting": [
+          "Uses Direct2D on Windows",
+          "Skia on Linux",
+          "Core Graphics on macOS"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "4.0"
+    },
+    {
+      "key": "dom.security.https_only_mode",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Force all connections to use HTTPS",
+      "effects": {
+        "positive": [
+          "Protects against downgrade attacks",
+          "Ensures encrypted connections",
+          "Automatic HTTP to HTTPS upgrade"
+        ],
+        "negative": [
+          "Breaks HTTP-only sites",
+          "May prevent access to local development servers",
+          "Some old sites become inaccessible"
+        ],
+        "interesting": [
+          "Shows warning for HTTP-only sites",
+          "Can be overridden per-site",
+          "HTTPS-First mode coming"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "83.0"
+    },
+    {
+      "key": "dom.webnotifications.enabled",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Web Notifications API",
+      "effects": {
+        "positive": [
+          "Websites can send notifications",
+          "Better user engagement for web apps"
+        ],
+        "negative": [
+          "Notification spam if not managed",
+          "Privacy concern (permission tracking)"
+        ],
+        "interesting": [
+          "Requires user permission",
+          "Can be managed per-site",
+          "Integrated with OS notification system"
+        ]
+      },
+      "permissions": ["notifications"],
+      "geckoMinVersion": "22.0"
+    },
+    {
+      "key": "browser.cache.disk.enable",
+      "type": "boolean",
+      "category": "performance",
+      "safetyLevel": "dangerous",
+      "defaultValue": true,
+      "description": "Enable disk cache for web content",
+      "effects": {
+        "positive": [
+          "Faster page loads on revisit",
+          "Lower bandwidth usage",
+          "Offline page availability"
+        ],
+        "negative": [
+          "Disabling breaks most web browsing",
+          "Significantly slower without cache",
+          "Higher bandwidth usage",
+          "Forensic privacy concern"
+        ],
+        "interesting": [
+          "Mainly useful for privacy-focused setups",
+          "Can be combined with memory-only cache",
+          "Size configurable separately"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.cache.memory.enable",
+      "type": "boolean",
+      "category": "performance",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable memory cache for web content",
+      "effects": {
+        "positive": [
+          "Faster back/forward navigation",
+          "Reduced disk I/O"
+        ],
+        "negative": [
+          "Uses RAM",
+          "Cache cleared on restart"
+        ],
+        "interesting": [
+          "Complementary to disk cache",
+          "Automatically sized based on RAM",
+          "Clears on low memory"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.sessionstore.privacy_level",
+      "type": "integer",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": 0,
+      "description": "Control what data is saved in session restore (0=all, 1=no-https, 2=never)",
+      "effects": {
+        "positive": [
+          "Better privacy for session data",
+          "Less data in session files"
+        ],
+        "negative": [
+          "Incomplete session restore",
+          "Form data may be lost",
+          "HTTPS sites not fully restored"
+        ],
+        "interesting": [
+          "Value 2 provides strongest privacy",
+          "Affects crash recovery",
+          "Session files in profile directory"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "3.0"
+    },
+    {
+      "key": "media.peerconnection.enabled",
+      "type": "boolean",
+      "category": "media",
+      "safetyLevel": "experimental",
+      "defaultValue": true,
+      "description": "Enable WebRTC peer connections",
+      "effects": {
+        "positive": [
+          "Video calling support",
+          "P2P file sharing",
+          "Real-time communication"
+        ],
+        "negative": [
+          "Can leak real IP address even with VPN",
+          "Privacy risk",
+          "Breaks video calling when disabled"
+        ],
+        "interesting": [
+          "Major privacy concern for VPN users",
+          "Used by Zoom, Meet, Discord",
+          "IP leak prevention requires additional config"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "20.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API"
+    },
+    {
+      "key": "media.autoplay.default",
+      "type": "integer",
+      "category": "media",
+      "safetyLevel": "safe",
+      "defaultValue": 0,
+      "description": "Control media autoplay (0=allow, 1=block audio, 2=block all, 5=block all with exceptions)",
+      "effects": {
+        "positive": [
+          "Prevents annoying autoplaying videos",
+          "Saves bandwidth",
+          "Better user experience"
+        ],
+        "negative": [
+          "May break legitimate autoplay (games, music sites)",
+          "Some sites require manual play button click"
+        ],
+        "interesting": [
+          "Value 5 allows user exceptions",
+          "Affects only audible media by default",
+          "Can be overridden per-site"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "63.0"
+    },
+    {
+      "key": "media.webspeech.synth.enabled",
+      "type": "boolean",
+      "category": "accessibility",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Web Speech Synthesis API (text-to-speech)",
+      "effects": {
+        "positive": [
+          "Screen reader support",
+          "Accessibility for visually impaired",
+          "Read-aloud functionality"
+        ],
+        "negative": [
+          "Privacy concern (voice fingerprinting)",
+          "Can be annoying if websites abuse it"
+        ],
+        "interesting": [
+          "Uses OS speech synthesis",
+          "Supports multiple languages",
+          "Can be controlled per-site"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "49.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API"
+    },
+    {
+      "key": "accessibility.force_disabled",
+      "type": "integer",
+      "category": "accessibility",
+      "safetyLevel": "dangerous",
+      "defaultValue": 0,
+      "description": "Force disable accessibility features (0=normal, 1=disabled)",
+      "effects": {
+        "positive": [
+          "Slightly better performance",
+          "Lower memory usage"
+        ],
+        "negative": [
+          "Breaks screen readers",
+          "Makes browser unusable for disabled users",
+          "Removes assistive technology support"
+        ],
+        "interesting": [
+          "Should never be enabled unless you know what you're doing",
+          "Affects NVDA, JAWS, VoiceOver integration",
+          "Can cause crashes with assistive tech"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.download.useDownloadDir",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Download files directly to download folder without asking",
+      "effects": {
+        "positive": [
+          "Faster downloads (no dialog)",
+          "Better for automated workflows"
+        ],
+        "negative": [
+          "No control over download location",
+          "May clutter downloads folder"
+        ],
+        "interesting": [
+          "Can combine with download folder setting",
+          "Useful for power users",
+          "Some file types always prompt"
+        ]
+      },
+      "permissions": ["downloads"],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.safebrowsing.malware.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable malware protection via Safe Browsing",
+      "effects": {
+        "positive": [
+          "Protection against malware downloads",
+          "Warning for dangerous sites",
+          "Reduced infection risk"
+        ],
+        "negative": [
+          "Sends URLs to Google (privacy concern)",
+          "Occasional false positives",
+          "Slight performance impact"
+        ],
+        "interesting": [
+          "Uses Google Safe Browsing API",
+          "Prefix-based for privacy",
+          "Updated frequently",
+          "Can be self-hosted"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "1.5"
+    },
+    {
+      "key": "browser.safebrowsing.phishing.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable phishing protection via Safe Browsing",
+      "effects": {
+        "positive": [
+          "Warning for phishing sites",
+          "Credential theft protection",
+          "Better security"
+        ],
+        "negative": [
+          "Sends URLs to Google (privacy concern)",
+          "Can block legitimate sites occasionally"
+        ],
+        "interesting": [
+          "Complementary to malware protection",
+          "Blocks credential harvesting",
+          "Machine learning enhanced"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "2.0"
+    },
+    {
+      "key": "geo.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Geolocation API",
+      "effects": {
+        "positive": [
+          "Location-based services work",
+          "Better maps and local search"
+        ],
+        "negative": [
+          "Privacy risk (location tracking)",
+          "Always requires user permission"
+        ],
+        "interesting": [
+          "Uses WiFi/IP geolocation",
+          "Can be spoofed with extensions",
+          "Permission prompts can be remembered"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "3.5",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API"
+    },
+    {
+      "key": "dom.storage.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "dangerous",
+      "defaultValue": true,
+      "description": "Enable DOM Storage (localStorage/sessionStorage)",
+      "effects": {
+        "positive": [
+          "Web apps can store data locally",
+          "Better offline support"
+        ],
+        "negative": [
+          "Disabling breaks most modern websites",
+          "No persistent user preferences",
+          "Cannot login to most sites"
+        ],
+        "interesting": [
+          "5-10MB per domain typically",
+          "Survives browser restart",
+          "Can be cleared manually"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "2.0"
+    },
+    {
+      "key": "dom.indexedDB.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "experimental",
+      "defaultValue": true,
+      "description": "Enable IndexedDB API",
+      "effects": {
+        "positive": [
+          "Large-scale client-side storage",
+          "Better offline web apps",
+          "Structured data storage"
+        ],
+        "negative": [
+          "Disabling breaks many modern web apps",
+          "Privacy concern (persistent tracking)",
+          "Can consume significant disk space"
+        ],
+        "interesting": [
+          "No size limit (user approval needed for large sizes)",
+          "Transactional database",
+          "Used by PWAs extensively"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "16.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API"
+    },
+    {
+      "key": "browser.newtabpage.activity-stream.feeds.topsites",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Show top sites on new tab page",
+      "effects": {
+        "positive": [
+          "Quick access to frequent sites",
+          "Customizable shortcuts"
+        ],
+        "negative": [
+          "Privacy concern (exposes browsing habits)",
+          "Data sent to Mozilla for personalization"
+        ],
+        "interesting": [
+          "Can be customized/removed",
+          "Syncs across devices",
+          "Part of Activity Stream"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "57.0"
+    },
+    {
+      "key": "browser.newtabpage.activity-stream.feeds.section.highlights",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Show recent highlights on new tab page",
+      "effects": {
+        "positive": [
+          "Quick access to recent/bookmarked content",
+          "Personalized recommendations"
+        ],
+        "negative": [
+          "Privacy concern",
+          "Can show embarrassing sites",
+          "Telemetry data sent to Mozilla"
+        ],
+        "interesting": [
+          "Uses machine learning",
+          "Opt-out available",
+          "Can disable individual sections"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "57.0"
+    },
+    {
+      "key": "extensions.pocket.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Pocket integration",
+      "effects": {
+        "positive": [
+          "Save articles for later",
+          "Cross-device reading list"
+        ],
+        "negative": [
+          "Privacy concern (Mozilla-owned but separate service)",
+          "Data sent to Pocket servers",
+          "Clutters UI if not used"
+        ],
+        "interesting": [
+          "Acquired by Mozilla in 2017",
+          "Premium tier available",
+          "Can be fully removed"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "38.0.5"
+    },
+    {
+      "key": "toolkit.telemetry.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Firefox telemetry data collection",
+      "effects": {
+        "positive": [
+          "Helps Mozilla improve Firefox",
+          "Bug detection",
+          "Performance insights"
+        ],
+        "negative": [
+          "Privacy concern (usage data sent to Mozilla)",
+          "Slight performance overhead"
+        ],
+        "interesting": [
+          "Can view collected data locally",
+          "GDPR compliant",
+          "Separate from crash reports"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "7.0"
+    },
+    {
+      "key": "datareporting.healthreport.uploadEnabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Upload Firefox Health Report data",
+      "effects": {
+        "positive": [
+          "Helps Mozilla understand usage patterns",
+          "Improve stability"
+        ],
+        "negative": [
+          "Privacy concern",
+          "Periodic network activity"
+        ],
+        "interesting": [
+          "Separate from telemetry",
+          "Can be viewed in about:healthreport",
+          "Aggregated data only"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "20.0"
+    },
+    {
+      "key": "network.dns.disableIPv6",
+      "type": "boolean",
+      "category": "network",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Disable IPv6 DNS lookups",
+      "effects": {
+        "positive": [
+          "Slightly faster DNS on IPv4-only networks",
+          "Avoid IPv6 connectivity issues"
+        ],
+        "negative": [
+          "Prevents IPv6 connectivity",
+          "Slower on IPv6 networks",
+          "Future-proofing concern"
+        ],
+        "interesting": [
+          "Useful for broken IPv6 setups",
+          "May reduce DNS privacy (fewer A/AAAA queries)",
+          "Temporary workaround for network issues"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "network.trr.mode",
+      "type": "integer",
+      "category": "network",
+      "safetyLevel": "safe",
+      "defaultValue": 0,
+      "description": "DNS-over-HTTPS mode (0=off, 2=TRR first, 3=TRR only, 5=off by choice)",
+      "effects": {
+        "positive": [
+          "Encrypted DNS queries (privacy)",
+          "Bypass ISP DNS censorship",
+          "DNSSEC validation"
+        ],
+        "negative": [
+          "May break local network name resolution",
+          "Relies on third-party resolver",
+          "Can be slower initially"
+        ],
+        "interesting": [
+          "TRR = Trusted Recursive Resolver",
+          "Default provider is Cloudflare",
+          "Mode 3 is most private but may break captive portals"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "60.0",
+      "documentation": "https://wiki.mozilla.org/Trusted_Recursive_Resolver"
+    },
+    {
+      "key": "network.proxy.socks_remote_dns",
+      "type": "boolean",
+      "category": "network",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Perform DNS lookups through SOCKS proxy",
+      "effects": {
+        "positive": [
+          "Prevents DNS leaks when using SOCKS proxy",
+          "Better privacy with Tor/VPN",
+          "DNS queries go through proxy"
+        ],
+        "negative": [
+          "Slightly slower DNS resolution",
+          "Only works with SOCKS proxies"
+        ],
+        "interesting": [
+          "Essential for Tor Browser",
+          "Prevents DNS leak attacks",
+          "Works with SOCKS4a and SOCKS5"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "dom.serviceWorkers.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "experimental",
+      "defaultValue": true,
+      "description": "Enable Service Workers API (PWA support)",
+      "effects": {
+        "positive": [
+          "Progressive Web App support",
+          "Offline functionality",
+          "Background sync",
+          "Push notifications"
+        ],
+        "negative": [
+          "Privacy concern (persistent background scripts)",
+          "Can consume resources",
+          "PWAs won't work if disabled"
+        ],
+        "interesting": [
+          "Required for PWAs",
+          "Enables offline-first web apps",
+          "Can intercept network requests"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "44.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API"
+    },
+    {
+      "key": "dom.push.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Push API for web notifications",
+      "effects": {
+        "positive": [
+          "Web push notifications",
+          "Real-time updates from websites",
+          "Better engagement for web apps"
+        ],
+        "negative": [
+          "Privacy concern (persistent connection)",
+          "Background network activity",
+          "Battery usage on mobile"
+        ],
+        "interesting": [
+          "Uses Mozilla's push service by default",
+          "Requires HTTPS",
+          "User permission required"
+        ]
+      },
+      "permissions": ["notifications"],
+      "geckoMinVersion": "44.0"
+    },
+    {
+      "key": "javascript.options.wasm",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable WebAssembly support",
+      "effects": {
+        "positive": [
+          "Near-native performance for web apps",
+          "Games and complex apps work",
+          "Industry standard feature"
+        ],
+        "negative": [
+          "Security concern (some exploits target WASM)",
+          "Can be used for cryptomining"
+        ],
+        "interesting": [
+          "Compile C/C++/Rust to web",
+          "W3C standard",
+          "Used by major web apps (Figma, AutoCAD)"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "52.0",
+      "documentation": "https://webassembly.org/"
+    },
+    {
+      "key": "javascript.options.wasm_simd",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable WebAssembly SIMD (vector operations)",
+      "effects": {
+        "positive": [
+          "Much faster WASM performance",
+          "Better for video/audio processing",
+          "Parallel computations"
+        ],
+        "negative": [
+          "Not all CPUs support SIMD efficiently",
+          "Slight compatibility concern"
+        ],
+        "interesting": [
+          "128-bit vector operations",
+          "Standardized in WASM spec",
+          "Major performance boost for media apps"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "89.0"
+    },
+    {
+      "key": "javascript.options.wasm_gc",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Enable WebAssembly garbage collection proposal",
+      "effects": {
+        "positive": [
+          "Better integration with GC languages",
+          "Smaller WASM binaries",
+          "Faster startup for some apps"
+        ],
+        "negative": [
+          "Experimental feature",
+          "Limited browser support",
+          "May have bugs"
+        ],
+        "interesting": [
+          "Allows Java/Kotlin/C# to compile to WASM efficiently",
+          "Proposal stage in WASM spec",
+          "Major architectural change"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "120.0"
+    },
+    {
+      "key": "dom.webgpu.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Enable WebGPU API (next-gen graphics)",
+      "effects": {
+        "positive": [
+          "Modern GPU API for web",
+          "Better than WebGL performance",
+          "Compute shader support"
+        ],
+        "negative": [
+          "Experimental, may have bugs",
+          "Limited GPU driver support",
+          "Security concerns being addressed"
+        ],
+        "interesting": [
+          "Successor to WebGL",
+          "Based on Vulkan/Metal/Direct3D 12",
+          "First-class compute shaders"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "113.0",
+      "documentation": "https://gpuweb.github.io/gpuweb/"
+    },
+    {
+      "key": "browser.display.use_document_fonts",
+      "type": "integer",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": 1,
+      "description": "Allow websites to use custom fonts (0=never, 1=allow)",
+      "effects": {
+        "positive": [
+          "Faster page loads without web fonts",
+          "Consistent text appearance",
+          "Privacy improvement (no font fingerprinting)"
+        ],
+        "negative": [
+          "Websites look broken/ugly",
+          "Icons may not display",
+          "Design intent lost"
+        ],
+        "interesting": [
+          "Disabling can improve privacy",
+          "Reduces bandwidth usage",
+          "May break icon fonts"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.zoom.siteSpecific",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Remember zoom level per-site",
+      "effects": {
+        "positive": [
+          "Convenient for sites needing different zoom",
+          "Accessibility benefit"
+        ],
+        "negative": [
+          "Slight privacy concern (fingerprinting)",
+          "Can be confusing if you forget"
+        ],
+        "interesting": [
+          "Stored in site permissions",
+          "Syncs with Firefox Sync",
+          "Can be cleared like cookies"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "3.0"
+    },
+    {
+      "key": "browser.tabs.closeWindowWithLastTab",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Close browser window when last tab is closed",
+      "effects": {
+        "positive": [
+          "Cleaner workflow",
+          "Prevents empty windows"
+        ],
+        "negative": [
+          "Can accidentally close browser",
+          "May interrupt workflow"
+        ],
+        "interesting": [
+          "Behavior matches other browsers",
+          "Useful for single-tab workflows",
+          "Can combine with session restore"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "3.5"
+    },
+    {
+      "key": "browser.tabs.loadBookmarksInTabs",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Open bookmarks in new tabs instead of current tab",
+      "effects": {
+        "positive": [
+          "Preserves current page",
+          "Better for multitasking"
+        ],
+        "negative": [
+          "More tabs to manage",
+          "Different from default behavior"
+        ],
+        "interesting": [
+          "Middle-click always opens in new tab",
+          "Affects bookmark toolbar clicks",
+          "Preference varies by user"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.tabs.warnOnClose",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Show warning when closing multiple tabs",
+      "effects": {
+        "positive": [
+          "Prevents accidental data loss",
+          "Safety net for users"
+        ],
+        "negative": [
+          "Annoying for power users",
+          "Extra click to confirm"
+        ],
+        "interesting": [
+          "Threshold is typically 2+ tabs",
+          "Can be bypassed with Ctrl+Q",
+          "Session restore reduces need"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "dom.battery.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Enable Battery Status API",
+      "effects": {
+        "positive": [
+          "Websites can optimize for battery",
+          "Better mobile experience"
+        ],
+        "negative": [
+          "Privacy concern (battery fingerprinting)",
+          "Can track device uniquely",
+          "Security researchers recommend disabling"
+        ],
+        "interesting": [
+          "Deprecated due to privacy concerns",
+          "Used for fingerprinting",
+          "Disabled by default in Firefox 52+"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "43.0",
+      "geckoMaxVersion": "52.0"
+    },
+    {
+      "key": "dom.event.clipboardevents.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Allow websites to detect clipboard events (copy/paste)",
+      "effects": {
+        "positive": [
+          "Rich text editors work better",
+          "Better copy/paste UX on some sites"
+        ],
+        "negative": [
+          "Privacy concern (clipboard monitoring)",
+          "Websites know when you copy text",
+          "Can interfere with copy/paste"
+        ],
+        "interesting": [
+          "Sites can modify clipboard content",
+          "Used by online code editors",
+          "Can be abused for tracking"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "22.0"
+    },
+    {
+      "key": "dom.gamepad.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Gamepad API for controller support",
+      "effects": {
+        "positive": [
+          "Web games can use controllers",
+          "Better gaming experience",
+          "Standard input method"
+        ],
+        "negative": [
+          "Privacy concern (device fingerprinting)",
+          "Exposes connected controllers"
+        ],
+        "interesting": [
+          "W3C standard",
+          "Works with Xbox/PlayStation controllers",
+          "Can identify specific controller models"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "29.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API"
+    },
+    {
+      "key": "dom.vr.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Enable WebVR API (deprecated, use WebXR)",
+      "effects": {
+        "positive": [
+          "VR headset support in browser",
+          "Immersive experiences"
+        ],
+        "negative": [
+          "Deprecated in favor of WebXR",
+          "Limited hardware support",
+          "May have bugs"
+        ],
+        "interesting": [
+          "Replaced by WebXR Device API",
+          "Worked with Oculus Rift, HTC Vive",
+          "Mozilla was early adopter"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "55.0",
+      "geckoMaxVersion": "98.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/API/WebVR_API"
+    },
+    {
+      "key": "dom.webxr.enabled",
+      "type": "boolean",
+      "category": "experimental",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Enable WebXR API (VR/AR headset support)",
+      "effects": {
+        "positive": [
+          "VR/AR experiences in browser",
+          "Modern XR standard",
+          "Better than WebVR"
+        ],
+        "negative": [
+          "Experimental",
+          "Limited headset support",
+          "Privacy concerns (sensor access)"
+        ],
+        "interesting": [
+          "Successor to WebVR",
+          "Supports AR and VR",
+          "W3C standard"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "98.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API"
+    },
+    {
+      "key": "media.eme.enabled",
+      "type": "boolean",
+      "category": "media",
+      "safetyLevel": "experimental",
+      "defaultValue": true,
+      "description": "Enable Encrypted Media Extensions (DRM for video)",
+      "effects": {
+        "positive": [
+          "Netflix, Spotify, Disney+ work",
+          "Premium content playback",
+          "Industry standard DRM"
+        ],
+        "negative": [
+          "DRM is anti-freedom",
+          "Closed-source components (Widevine)",
+          "Privacy concerns"
+        ],
+        "interesting": [
+          "Required for most streaming services",
+          "Uses Google Widevine CDM",
+          "Controversial in FOSS community"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "38.0",
+      "documentation": "https://www.w3.org/TR/encrypted-media/"
+    },
+    {
+      "key": "media.ffmpeg.vaapi.enabled",
+      "type": "boolean",
+      "category": "performance",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Enable hardware video decoding via VAAPI (Linux)",
+      "effects": {
+        "positive": [
+          "Much lower CPU usage for video",
+          "Better battery life",
+          "Smoother playback"
+        ],
+        "negative": [
+          "Linux only",
+          "Requires proper driver setup",
+          "May have glitches on some hardware"
+        ],
+        "interesting": [
+          "Uses GPU for video decode",
+          "Intel/AMD GPUs supported",
+          "Nvidia requires special setup"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "80.0"
+    },
+    {
+      "key": "media.videocontrols.picture-in-picture.enabled",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Picture-in-Picture mode for videos",
+      "effects": {
+        "positive": [
+          "Watch videos while browsing",
+          "Multitasking capability",
+          "Floating video window"
+        ],
+        "negative": [
+          "Can be distracting",
+          "Uses screen real estate"
+        ],
+        "interesting": [
+          "Works with most video sites",
+          "Keyboard shortcut available",
+          "Can move to any screen"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "71.0"
+    },
+    {
+      "key": "media.navigator.mediadataencoder_vpx_enabled",
+      "type": "boolean",
+      "category": "media",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable VP8/VP9 encoding for MediaRecorder",
+      "effects": {
+        "positive": [
+          "Record video in open formats",
+          "Better than H.264 patents",
+          "Good compression"
+        ],
+        "negative": [
+          "Slower encoding than hardware H.264",
+          "Larger files than H.265"
+        ],
+        "interesting": [
+          "Google's open codec",
+          "Used by WebM",
+          "Royalty-free"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "47.0"
+    },
+    {
+      "key": "browser.contentblocking.category",
+      "type": "string",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": "standard",
+      "description": "Content blocking level (standard/strict/custom)",
+      "effects": {
+        "positive": [
+          "Blocks trackers and ads",
+          "Faster page loads",
+          "Better privacy"
+        ],
+        "negative": [
+          "Strict mode can break sites",
+          "May interfere with login flows",
+          "Some content won't load"
+        ],
+        "interesting": [
+          "Strict mode very aggressive",
+          "Custom allows fine-tuning",
+          "Standard mode is good default"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "65.0"
+    },
+    {
+      "key": "privacy.partition.network_state",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Partition network state by top-level site (Total Cookie Protection)",
+      "effects": {
+        "positive": [
+          "Prevents cross-site tracking",
+          "Each site gets isolated storage",
+          "Strong privacy protection"
+        ],
+        "negative": [
+          "May break some SSO flows",
+          "Third-party embeds lose state",
+          "Some widgets may not work"
+        ],
+        "interesting": [
+          "Core of Total Cookie Protection",
+          "Similar to first-party isolation",
+          "Default in Firefox 86+"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "86.0",
+      "documentation": "https://blog.mozilla.org/security/2021/02/23/total-cookie-protection/"
+    },
+    {
+      "key": "privacy.globalprivacycontrol.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Send Global Privacy Control (GPC) signal",
+      "effects": {
+        "positive": [
+          "Legally binding opt-out in some jurisdictions",
+          "Better than DNT header",
+          "CCPA/GDPR compliance"
+        ],
+        "negative": [
+          "Not all sites respect it",
+          "Experimental standard",
+          "May make you more fingerprintable"
+        ],
+        "interesting": [
+          "Successor to Do Not Track",
+          "Legal weight in California/Colorado",
+          "Adopted by privacy regulations"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "95.0",
+      "documentation": "https://globalprivacycontrol.org/"
+    },
+    {
+      "key": "browser.link.open_newwindow",
+      "type": "integer",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": 3,
+      "description": "How to open links (1=current, 2=new window, 3=new tab)",
+      "effects": {
+        "positive": [
+          "Control default link behavior",
+          "Consistent navigation experience"
+        ],
+        "negative": [
+          "May conflict with site expectations",
+          "Some workflows prefer windows"
+        ],
+        "interesting": [
+          "Value 3 most common",
+          "Affects target='_blank' links",
+          "Can be overridden per-link"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.link.open_newwindow.restriction",
+      "type": "integer",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": 2,
+      "description": "Restrict popups (0=always allow, 2=block)",
+      "effects": {
+        "positive": [
+          "Blocks popup spam",
+          "Better browsing experience",
+          "Security benefit"
+        ],
+        "negative": [
+          "May block legitimate popups",
+          "Some sites require popups"
+        ],
+        "interesting": [
+          "Works with open_newwindow setting",
+          "Exceptions can be added",
+          "Most sites use overlays now"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.search.suggest.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Show search suggestions in address bar",
+      "effects": {
+        "positive": [
+          "Faster search",
+          "Discovery of related queries",
+          "Convenient"
+        ],
+        "negative": [
+          "Sends keystrokes to search engine",
+          "Privacy concern",
+          "Network activity on typing"
+        ],
+        "interesting": [
+          "Can be disabled per-search engine",
+          "Different from history suggestions",
+          "Encrypted in transit"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "2.0"
+    },
+    {
+      "key": "keyword.enabled",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable smart keywords in address bar",
+      "effects": {
+        "positive": [
+          "Quick site-specific searches",
+          "Bookmark keywords work",
+          "Power user feature"
+        ],
+        "negative": [
+          "Can be confusing for new users",
+          "Accidental searches"
+        ],
+        "interesting": [
+          "Custom search shortcuts",
+          "Format: 'keyword searchterm'",
+          "Very old Firefox feature"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.urlbar.trimURLs",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Hide 'http://' and trailing slashes in address bar",
+      "effects": {
+        "positive": [
+          "Cleaner appearance",
+          "More space for URL",
+          "Modern browser behavior"
+        ],
+        "negative": [
+          "Hides protocol information",
+          "Can be misleading for security",
+          "Some prefer full URLs"
+        ],
+        "interesting": [
+          "HTTPS:// still shown",
+          "Affects display only, not copy/paste",
+          "Controversial UX decision"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "7.0"
+    },
+    {
+      "key": "ui.key.menuAccessKeyFocuses",
+      "type": "boolean",
+      "category": "accessibility",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Alt key shows menu bar (Windows/Linux)",
+      "effects": {
+        "positive": [
+          "Access menu bar easily",
+          "Keyboard navigation",
+          "Accessibility feature"
+        ],
+        "negative": [
+          "Alt key behavior changes",
+          "May interfere with web app shortcuts"
+        ],
+        "interesting": [
+          "Windows standard behavior",
+          "Can be toggled with F10",
+          "Affects hidden menu bar"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "security.ssl.require_safe_negotiation",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "experimental",
+      "defaultValue": false,
+      "description": "Require TLS with safe renegotiation",
+      "effects": {
+        "positive": [
+          "Protection against TLS renegotiation attacks",
+          "Stronger security"
+        ],
+        "negative": [
+          "May break old/misconfigured servers",
+          "Connection failures on legacy sites"
+        ],
+        "interesting": [
+          "Protects against CVE-2009-3555",
+          "Most servers support it now",
+          "Security vs compatibility tradeoff"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "3.6"
+    },
+    {
+      "key": "security.tls.version.min",
+      "type": "integer",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": 3,
+      "description": "Minimum TLS version (1=TLS 1.0, 2=TLS 1.1, 3=TLS 1.2, 4=TLS 1.3)",
+      "effects": {
+        "positive": [
+          "Better security with higher versions",
+          "Avoid deprecated protocols"
+        ],
+        "negative": [
+          "May break very old websites",
+          "TLS 1.0/1.1 no longer widely used"
+        ],
+        "interesting": [
+          "TLS 1.2 (value 3) is safe default",
+          "TLS 1.3 offers best security",
+          "TLS 1.0/1.1 deprecated by RFC"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "74.0"
+    },
+    {
+      "key": "security.insecure_connection_text.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Show 'Not Secure' text for HTTP sites",
+      "effects": {
+        "positive": [
+          "Warns users about insecure sites",
+          "Encourages HTTPS adoption",
+          "Better security awareness"
+        ],
+        "negative": [
+          "Can be alarming for harmless HTTP sites",
+          "Extra UI clutter"
+        ],
+        "interesting": [
+          "Standard across modern browsers",
+          "Helps push web to HTTPS",
+          "Visible security indicator"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "70.0"
+    },
+    {
+      "key": "browser.download.improvements_to_download_panel",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Use new downloads panel UI",
+      "effects": {
+        "positive": [
+          "Better download management",
+          "Modern UI",
+          "More features"
+        ],
+        "negative": [
+          "Different from classic UI",
+          "May need to relearn"
+        ],
+        "interesting": [
+          "Introduced in Firefox 70+",
+          "Shows download progress inline",
+          "Better file management"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "70.0"
+    },
+    {
+      "key": "browser.tabs.firefox-view",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable Firefox View (recent tabs, synced tabs)",
+      "effects": {
+        "positive": [
+          "See recently closed tabs",
+          "Synced tabs from other devices",
+          "Better tab management"
+        ],
+        "negative": [
+          "Privacy concern (telemetry)",
+          "Takes up tab bar space",
+          "Not useful without Firefox Sync"
+        ],
+        "interesting": [
+          "Introduced in Firefox 106",
+          "Replaces Synced Tabs sidebar",
+          "Integrates with Firefox Sync"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "106.0"
+    },
+    {
+      "key": "devtools.debugger.ui.panes-workers-and-sources-width",
+      "type": "integer",
+      "category": "developer",
+      "safetyLevel": "safe",
+      "defaultValue": 200,
+      "description": "Width of debugger source pane in pixels",
+      "effects": {
+        "positive": [
+          "Customize debugger layout",
+          "Better for large/small screens"
+        ],
+        "negative": [
+          "Only affects debugger UI",
+          "Manual adjustment needed"
+        ],
+        "interesting": [
+          "Persistent across sessions",
+          "Affects DevTools debugger",
+          "Can be reset to default"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "52.0"
+    },
+    {
+      "key": "devtools.webconsole.filter.css",
+      "type": "boolean",
+      "category": "developer",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Show CSS warnings in web console",
+      "effects": {
+        "positive": [
+          "See CSS errors and warnings",
+          "Better for frontend development",
+          "Catch CSS issues early"
+        ],
+        "negative": [
+          "Console can get very noisy",
+          "Many false positives from third-party CSS"
+        ],
+        "interesting": [
+          "Off by default for good reason",
+          "Useful for CSS debugging",
+          "Can filter by severity"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "4.0"
+    },
+    {
+      "key": "devtools.performance.recording.features",
+      "type": "string",
+      "category": "developer",
+      "safetyLevel": "safe",
+      "defaultValue": "[\"js\",\"stackwalk\",\"screenshots\",\"memory\"]",
+      "description": "Features to record in Performance profiler",
+      "effects": {
+        "positive": [
+          "Customize profiler data collection",
+          "Better performance analysis",
+          "Reduce overhead by disabling features"
+        ],
+        "negative": [
+          "JSON array string (advanced)",
+          "Wrong syntax breaks profiler"
+        ],
+        "interesting": [
+          "Options: js, stackwalk, screenshots, memory, cpu",
+          "Memory profiling is expensive",
+          "Screenshots useful for UI performance"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "55.0"
+    },
+    {
+      "key": "devtools.responsive.metaViewport.enabled",
+      "type": "boolean",
+      "category": "developer",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Respect viewport meta tags in Responsive Design Mode",
+      "effects": {
+        "positive": [
+          "Accurate mobile testing",
+          "Respects site's viewport settings",
+          "Better RDM accuracy"
+        ],
+        "negative": [
+          "May make testing harder",
+          "Sites without meta viewport behave oddly"
+        ],
+        "interesting": [
+          "Essential for responsive testing",
+          "Affects zoom and scaling",
+          "Matches real mobile behavior"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "52.0"
+    },
+    {
+      "key": "devtools.inspector.showUserAgentStyles",
+      "type": "boolean",
+      "category": "developer",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Show browser default styles in Inspector",
+      "effects": {
+        "positive": [
+          "See all applied styles",
+          "Understand cascade better",
+          "Debug style conflicts"
+        ],
+        "negative": [
+          "Very cluttered styles pane",
+          "Hard to find site styles",
+          "Overwhelming for beginners"
+        ],
+        "interesting": [
+          "Shows browser's internal CSS",
+          "Useful for understanding defaults",
+          "Can be toggled in Inspector"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "4.0"
+    },
+    {
+      "key": "dom.webdriver.enabled",
+      "type": "boolean",
+      "category": "developer",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Enable WebDriver (Selenium/automation)",
+      "effects": {
+        "positive": [
+          "Automated testing support",
+          "Selenium integration",
+          "CI/CD workflows"
+        ],
+        "negative": [
+          "Exposes navigator.webdriver property",
+          "Sites can detect automation",
+          "Bot detection triggers"
+        ],
+        "interesting": [
+          "W3C standard automation",
+          "geckodriver uses this",
+          "Can be detected by sites"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "55.0",
+      "documentation": "https://developer.mozilla.org/en-US/docs/Web/WebDriver"
+    },
+    {
+      "key": "browser.contentblocking.report.lockwise.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Show password breach alerts in Lockwise",
+      "effects": {
+        "positive": [
+          "Alerts for compromised passwords",
+          "Better security awareness",
+          "Powered by Have I Been Pwned"
+        ],
+        "negative": [
+          "Privacy concern (password hashes sent)",
+          "Can be alarming",
+          "Requires Firefox account"
+        ],
+        "interesting": [
+          "Uses k-anonymity for privacy",
+          "Only hash prefixes sent",
+          "Part of Firefox Monitor"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "70.0"
+    },
+    {
+      "key": "signon.rememberSignons",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Offer to save passwords",
+      "effects": {
+        "positive": [
+          "Convenient password management",
+          "Built-in password manager",
+          "Encrypted storage"
+        ],
+        "negative": [
+          "Security risk if device compromised",
+          "Privacy concern (master password recommended)",
+          "External password managers preferred by some"
+        ],
+        "interesting": [
+          "Master password feature available",
+          "Syncs with Firefox Sync",
+          "FIPS mode available"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "signon.autofillForms",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Autofill login forms with saved passwords",
+      "effects": {
+        "positive": [
+          "Faster logins",
+          "Convenience",
+          "Less typing"
+        ],
+        "negative": [
+          "Security risk (credential theft if XSS)",
+          "May autofill on wrong sites",
+          "Privacy concern on shared computers"
+        ],
+        "interesting": [
+          "Works with signon.rememberSignons",
+          "Can be disabled separately from saving",
+          "Different from form autocomplete"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "2.0"
+    },
+    {
+      "key": "signon.generation.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Offer to generate strong passwords",
+      "effects": {
+        "positive": [
+          "Strong unique passwords",
+          "Better security",
+          "Reduces password reuse"
+        ],
+        "negative": [
+          "Must use Firefox to access passwords",
+          "No control over generation algorithm",
+          "Sync required for multi-device"
+        ],
+        "interesting": [
+          "Introduced in Firefox 69",
+          "Cryptographically random",
+          "Customizable length"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "69.0"
+    },
+    {
+      "key": "browser.formfill.enable",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Remember form history (non-password fields)",
+      "effects": {
+        "positive": [
+          "Faster form filling",
+          "Remember common inputs",
+          "Convenience"
+        ],
+        "negative": [
+          "Privacy concern (form data saved)",
+          "Can expose sensitive non-password data",
+          "Clutters autocomplete"
+        ],
+        "interesting": [
+          "Separate from password manager",
+          "Can be cleared in privacy settings",
+          "Per-field basis"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.history_expire_days",
+      "type": "integer",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": 180,
+      "description": "Days to keep browsing history",
+      "effects": {
+        "positive": [
+          "Automatic history cleanup",
+          "Privacy improvement",
+          "Smaller profile size"
+        ],
+        "negative": [
+          "Lose older history",
+          "Can't revisit old pages",
+          "Affects address bar suggestions"
+        ],
+        "interesting": [
+          "Default is ~6 months",
+          "0 disables history entirely",
+          "Can be very short for privacy"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "places.history.enabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "dangerous",
+      "defaultValue": true,
+      "description": "Enable browsing history",
+      "effects": {
+        "positive": [
+          "Track visited pages",
+          "Address bar suggestions",
+          "Revisit pages easily"
+        ],
+        "negative": [
+          "Disabling breaks many features",
+          "No history suggestions",
+          "Affects bookmarks UI",
+          "Some sites may break"
+        ],
+        "interesting": [
+          "Places is Firefox's database system",
+          "Also affects frecency algorithm",
+          "Permanent private browsing if disabled"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "3.0"
+    },
+    {
+      "key": "dom.allow_scripts_to_close_windows",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Allow JavaScript to close browser windows",
+      "effects": {
+        "positive": [
+          "Web apps can close their own windows",
+          "Better for some workflows"
+        ],
+        "negative": [
+          "Security risk (malicious closing)",
+          "Can be abused by sites",
+          "Annoying popups can close themselves"
+        ],
+        "interesting": [
+          "Restricted by default for good reason",
+          "Only works on script-opened windows in most cases",
+          "Security vs functionality tradeoff"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.privatebrowsing.forceMediaMemoryCache",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Force media cache to RAM in private browsing",
+      "effects": {
+        "positive": [
+          "No media cached to disk in private mode",
+          "Better privacy",
+          "No forensic traces"
+        ],
+        "negative": [
+          "Higher RAM usage",
+          "May cause issues with large videos",
+          "Limited by available memory"
+        ],
+        "interesting": [
+          "Private browsing specific",
+          "Prevents disk cache forensics",
+          "Clears on session end"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "60.0"
+    },
+    {
+      "key": "browser.privatebrowsing.autostart",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Always start in private browsing mode",
+      "effects": {
+        "positive": [
+          "Maximum privacy by default",
+          "No persistent history/cookies",
+          "Clean slate each session"
+        ],
+        "negative": [
+          "Can't save passwords/history",
+          "Must login to sites every time",
+          "Extensions may not work"
+        ],
+        "interesting": [
+          "Permanent private mode",
+          "Different from Tor Browser",
+          "Can still have add-ons"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "20.0"
+    },
+    {
+      "key": "permissions.default.camera",
+      "type": "integer",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": 0,
+      "description": "Default camera permission (0=ask, 1=allow, 2=block)",
+      "effects": {
+        "positive": [
+          "Control camera access",
+          "Privacy protection",
+          "Prevent unwanted camera usage"
+        ],
+        "negative": [
+          "Value 2 breaks video calling",
+          "Must be set per-site if blocked",
+          "May be inconvenient"
+        ],
+        "interesting": [
+          "Separate from microphone permission",
+          "Per-site overrides available",
+          "Important for privacy"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "60.0"
+    },
+    {
+      "key": "permissions.default.microphone",
+      "type": "integer",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": 0,
+      "description": "Default microphone permission (0=ask, 1=allow, 2=block)",
+      "effects": {
+        "positive": [
+          "Control microphone access",
+          "Privacy protection",
+          "Prevent eavesdropping"
+        ],
+        "negative": [
+          "Value 2 breaks voice/video calls",
+          "Per-site configuration needed",
+          "May interfere with web apps"
+        ],
+        "interesting": [
+          "Separate from camera permission",
+          "WebRTC uses this",
+          "Critical privacy setting"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "60.0"
+    },
+    {
+      "key": "permissions.default.desktop-notification",
+      "type": "integer",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": 0,
+      "description": "Default notification permission (0=ask, 1=allow, 2=block)",
+      "effects": {
+        "positive": [
+          "Control notification spam",
+          "Better privacy",
+          "Reduce interruptions"
+        ],
+        "negative": [
+          "Value 2 blocks all web notifications",
+          "Useful notifications blocked too",
+          "Per-site exceptions needed"
+        ],
+        "interesting": [
+          "Affects Web Notifications API",
+          "Can be managed per-site",
+          "Value 2 recommended for privacy"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "60.0"
+    },
+    {
+      "key": "permissions.default.geo",
+      "type": "integer",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": 0,
+      "description": "Default geolocation permission (0=ask, 1=allow, 2=block)",
+      "effects": {
+        "positive": [
+          "Protect location privacy",
+          "Prevent tracking",
+          "Control sharing"
+        ],
+        "negative": [
+          "Value 2 breaks location services",
+          "Maps won't work",
+          "Local search degraded"
+        ],
+        "interesting": [
+          "Very sensitive privacy setting",
+          "Can be spoofed with extensions",
+          "Value 2 recommended for privacy"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "60.0"
+    },
+    {
+      "key": "browser.helperApps.deleteTempFileOnExit",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Delete temporary files when Firefox closes",
+      "effects": {
+        "positive": [
+          "No leftover temp files",
+          "Better privacy",
+          "Disk space cleanup"
+        ],
+        "negative": [
+          "Can't access temp files after closing",
+          "Some workflows need persistent temps"
+        ],
+        "interesting": [
+          "Affects opened/downloaded files",
+          "Privacy best practice",
+          "Reduces forensic traces"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "browser.pagethumbnails.capturing_disabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "safe",
+      "defaultValue": false,
+      "description": "Disable capturing page thumbnails for new tab page",
+      "effects": {
+        "positive": [
+          "Better privacy (no screenshots)",
+          "Saves disk space",
+          "No thumbnail forensics"
+        ],
+        "negative": [
+          "New tab page shows no previews",
+          "Less visual appeal",
+          "Top sites have no images"
+        ],
+        "interesting": [
+          "Thumbnails stored in profile",
+          "Can expose private browsing",
+          "Disabled in private mode automatically"
+        ]
+      },
+      "permissions": ["privacy"],
+      "geckoMinVersion": "13.0"
+    },
+    {
+      "key": "media.navigator.permission.disabled",
+      "type": "boolean",
+      "category": "privacy",
+      "safetyLevel": "dangerous",
+      "defaultValue": false,
+      "description": "Disable camera/microphone permission prompts",
+      "effects": {
+        "positive": [
+          "Allows instant camera/mic access"
+        ],
+        "negative": [
+          "MAJOR PRIVACY RISK",
+          "Sites can access camera/mic without asking",
+          "Enables eavesdropping"
+        ],
+        "interesting": [
+          "Should NEVER be enabled",
+          "Exists for testing only",
+          "Overrides permission system"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "20.0"
+    },
+    {
+      "key": "full-screen-api.warning.timeout",
+      "type": "integer",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": 3000,
+      "description": "Duration of fullscreen warning in milliseconds",
+      "effects": {
+        "positive": [
+          "Security warning for fullscreen",
+          "Prevents spoofing attacks",
+          "User awareness"
+        ],
+        "negative": [
+          "Can be annoying for legitimate fullscreen",
+          "Delays video/game fullscreen"
+        ],
+        "interesting": [
+          "Shows site domain in warning",
+          "0 disables warning (not recommended)",
+          "Security vs UX tradeoff"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "47.0"
+    },
+    {
+      "key": "general.smoothScroll",
+      "type": "boolean",
+      "category": "ui",
+      "safetyLevel": "safe",
+      "defaultValue": true,
+      "description": "Enable smooth scrolling animations",
+      "effects": {
+        "positive": [
+          "Smoother visual scrolling",
+          "Better user experience",
+          "Modern browser feel"
+        ],
+        "negative": [
+          "Can feel sluggish",
+          "Some prefer instant scroll",
+          "Slight performance overhead"
+        ],
+        "interesting": [
+          "Affects page scrolling animation",
+          "Customizable speed",
+          "Preference varies by user"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "1.0"
+    },
+    {
+      "key": "ui.prefersReducedMotion",
+      "type": "integer",
+      "category": "accessibility",
+      "safetyLevel": "safe",
+      "defaultValue": 0,
+      "description": "Reduce animations (0=no preference, 1=reduce)",
+      "effects": {
+        "positive": [
+          "Accessibility for motion sensitivity",
+          "Reduces animations",
+          "Better for some users"
+        ],
+        "negative": [
+          "Less visual polish",
+          "Some animations disabled",
+          "Sites may look plainer"
+        ],
+        "interesting": [
+          "Respects OS setting by default",
+          "CSS media query: prefers-reduced-motion",
+          "Important accessibility feature"
+        ]
+      },
+      "permissions": [],
+      "geckoMinVersion": "63.0"
+    }
+  ]
+}

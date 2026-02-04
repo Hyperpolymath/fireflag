@@ -1,0 +1,272 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= FireFlag Screenshots Guide
+:toc:
+:toclevels: 3
+
+== Overview
+
+This directory contains screenshots for Mozilla Add-ons store listing and documentation.
+
+== Required Screenshots
+
+Mozilla Add-ons requires at least **3-10 screenshots** showing the extension in action:
+
+1. **Popup UI** (Browser Action) - Primary interface
+2. **Sidebar** - Detailed flag management
+3. **Options Page** - Settings configuration
+4. **DevTools Panel** - Developer features
+5. **Permission Request** - Granular permissions
+
+== Screenshot Specifications
+
+=== Mozilla Add-ons Requirements
+
+* **Format**: PNG or JPEG
+* **Size**: Maximum 5MB per image
+* **Dimensions**:
+  - Minimum: 320x200 pixels
+  - Maximum: 3840x2160 pixels
+  - Recommended: 1280x800 or 1920x1080
+* **Aspect ratio**: Between 1:1 and 5:1
+
+=== Recommended Specifications
+
+[cols="1,2,2",options="header"]
+|===
+| Component | Dimensions | Notes
+
+| Popup
+| 400x600
+| Vertical orientation, fits browser action
+
+| Sidebar
+| 350x700
+| Narrow vertical, sidebar width
+
+| Options Page
+| 1280x800
+| Full page, scrollable
+
+| DevTools Panel
+| 1280x400
+| Bottom panel, typical DevTools height
+
+| Permission Prompt
+| 480x300
+| Dialog box size
+|===
+
+== Automated Capture
+
+=== Using Puppeteer Script
+
+[source,bash]
+----
+# Run automated screenshot capture
+deno run --allow-all .screenshots/capture-screenshots.js
+
+# Follow the prompts to capture each UI component
+----
+
+This script will:
+
+1. Launch Firefox with FireFlag loaded
+2. Prompt you to navigate to each UI component
+3. Capture screenshots automatically
+4. Save to `.screenshots/` directory
+
+== Manual Capture
+
+=== Prerequisites
+
+1. Build extension: `just build-ext`
+2. Load in Firefox: `just run-ext` or load manually in `about:debugging`
+
+=== Capture Steps
+
+==== 1. Popup Screenshot
+
+1. Click FireFlag icon in toolbar
+2. Open Firefox Screenshot tool (Shift+Ctrl+S)
+3. Select "Save visible" or crop to popup area
+4. Save as `01-popup-overview.png`
+
+**What to show:**
+
+* Flag list with search bar
+* Safety level badges (Safe/Experimental/Dangerous)
+* Category filters
+* At least 5-10 visible flags
+* Permission indicators
+
+==== 2. Sidebar Screenshots
+
+1. Open sidebar: View > Sidebar > FireFlag (or Ctrl+Shift+F)
+2. Capture each tab:
+   - **Flags tab**: `02-sidebar-flags-tab.png`
+   - **Tracking tab**: `03-sidebar-tracking-tab.png`
+   - **Analytics tab**: `04-sidebar-analytics-tab.png`
+   - **Export tab**: `05-sidebar-export-tab.png`
+
+**What to show:**
+
+* Flags tab: Detailed flag view with effects (positive/negative/interesting)
+* Tracking tab: Before/after comparison, change history
+* Analytics tab: Performance metrics, impact analysis
+* Export tab: JSON/Markdown/CSV export options
+
+==== 3. Options Page Screenshots
+
+1. Open: `about:addons` → FireFlag → Preferences
+2. Capture each section:
+   - **General**: `06-options-general.png`
+   - **Tracking**: `07-options-tracking.png` (scroll down)
+   - **Permissions**: `08-options-permissions.png` (scroll down)
+
+**What to show:**
+
+* Auto-update settings
+* Tracking configuration (max history, metrics)
+* Permission management
+* Developer options
+
+==== 4. DevTools Panel Screenshots
+
+1. Open DevTools (F12)
+2. Navigate to "FireFlag" tab
+3. Capture each sub-tab:
+   - **Active Flags**: `09-devtools-active-flags.png`
+   - **Performance**: `10-devtools-performance.png`
+   - **Impact Analysis**: `11-devtools-impact-analysis.png`
+
+**What to show:**
+
+* Active flags in current page
+* Performance metrics (DCL, FCP, memory)
+* Impact recording (before/after toggle)
+
+==== 5. Permission Request Screenshot
+
+1. Toggle a flag that requires permissions (e.g., privacy flag)
+2. Capture the permission prompt: `12-permission-request.png`
+
+**What to show:**
+
+* Permission dialog
+* List of permissions being requested
+* Clear explanation of why permissions are needed
+
+== Image Optimization
+
+After capturing, optimize images for web:
+
+[source,bash]
+----
+# Optimize all PNGs (requires imagemagick)
+just optimize-screenshots
+
+# Or manually with imagemagick:
+for img in .screenshots/*.png; do
+  convert "$img" -resize '1280x800>' -quality 85 "$img"
+done
+
+# Or use pngcrush:
+for img in .screenshots/*.png; do
+  pngcrush -ow -rem alla -reduce "$img"
+done
+----
+
+== Mockup Screenshots (Temporary)
+
+SVG mockups are available in `.screenshots/mockups/` for:
+
+* Quick previews
+* Documentation
+* Store listing placeholder
+
+These should be replaced with real screenshots before final submission.
+
+== Store Listing Captions
+
+Each screenshot should have a descriptive caption:
+
+[source,yaml]
+----
+01-popup-overview.png:
+  caption: "Quick access popup - Browse and toggle 105+ Firefox flags with safety indicators"
+
+02-sidebar-flags-tab.png:
+  caption: "Detailed flag view - See positive, negative, and interesting effects before enabling"
+
+03-sidebar-tracking-tab.png:
+  caption: "Track changes - Monitor before/after performance and behavior"
+
+04-sidebar-analytics-tab.png:
+  caption: "Analytics dashboard - Understand impact of flag changes on browser performance"
+
+09-devtools-active-flags.png:
+  caption: "DevTools integration - Debug flags affecting current page in real-time"
+
+12-permission-request.png:
+  caption: "Granular permissions - See exactly what each flag requires before granting access"
+----
+
+== Screenshot Checklist
+
+Before submitting to Mozilla Add-ons:
+
+- [ ] All screenshots are 1280x800 or larger
+- [ ] Images are under 5MB each
+- [ ] At least 3 screenshots captured (minimum requirement)
+- [ ] All screenshots show actual FireFlag UI (no mockups)
+- [ ] Safety badges visible (Safe/Experimental/Dangerous)
+- [ ] Flag database shows diverse categories
+- [ ] DevTools panel demonstrates developer features
+- [ ] Permission prompt shows granular permission system
+- [ ] All images optimized (compressed)
+- [ ] Captions written for each screenshot
+- [ ] Screenshots show clean UI (no developer artifacts visible)
+- [ ] Firefox window chrome visible (or cropped consistently)
+
+== Quality Guidelines
+
+=== Do's
+
+* Use high-resolution display (Retina/HiDPI if available)
+* Show realistic data (actual Firefox flags, not placeholder text)
+* Capture with light theme (better contrast for most users)
+* Include browser context (show it's in Firefox)
+* Demonstrate key features (safety levels, tracking, permissions)
+
+=== Don'ts
+
+* Don't show developer tools open (unless capturing DevTools panel)
+* Don't include personal data in screenshots
+* Don't show debug console messages
+* Don't use Lorem Ipsum or fake data
+* Don't show empty states (populate with real flags)
+
+== Automated Screenshot Generation (CI/CD)
+
+For reproducible screenshots in CI:
+
+[source,bash]
+----
+# GitHub Actions workflow (manual trigger)
+# See .github/workflows/screenshots.yml
+
+# Generates screenshots automatically on every release
+# Uploads to artifacts for review
+----
+
+== License
+
+Screenshots are documentation and fall under the same license as FireFlag:
+
+* PMPL-1.0-or-later (primary)
+* MPL-2.0 (fallback for Mozilla Add-ons)
+
+== Contact
+
+Issues with screenshots? Open an issue:
+https://github.com/hyperpolymath/fireflag/issues

@@ -1,0 +1,287 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= FireFlag Containerization
+:toc:
+:toclevels: 3
+
+== Overview
+
+FireFlag uses a multi-layered containerization approach for reproducible, secure builds:
+
+* **Guix**: Reproducible build environment
+* **Chainguard**: Minimal security-focused base images
+* **Cerro-Terro**: Build orchestration with security scanning
+* **Podman/Docker**: Container runtime
+
+== Quick Start
+
+=== Option 1: Full Containerized Build (Recommended)
+
+[source,bash]
+----
+just container-build-full
+----
+
+This runs the complete build pipeline with security scanning and generates:
+
+* `build-output/web-ext-artifacts/*.xpi` - Unsigned extension
+* `build-output/web-ext-artifacts/SHA256SUMS` - Checksums
+* `build-output/sbom.json` - Software Bill of Materials
+
+=== Option 2: Simple Container Build
+
+[source,bash]
+----
+just container-build
+----
+
+Builds container image only (no artifact extraction).
+
+=== Option 3: Local Guix Build
+
+[source,bash]
+----
+just guix-build
+----
+
+Builds in local Guix environment (requires Guix installed).
+
+== Build Architecture
+
+=== Multi-Stage Dockerfile
+
+The `Containerfile` uses 4 stages:
+
+1. **guix-base**: Chainguard Wolfi + Guix installation
+2. **build-tools**: Install Deno, ReScript, Idris2, Zig via Guix
+3. **builder**: Compile extension (ReScript + Idris2 proofs)
+4. **runtime**: Minimal image with just the built .xpi
+
+=== Security Scanning Pipeline
+
+The `build.sh` script orchestrates:
+
+1. **Pre-build**:
+   - Svalin static analysis
+   - Selur secrets detection (TruffleHog)
+
+2. **Build**:
+   - Guix reproducible environment
+   - ReScript compilation
+   - Idris2 proof checking
+
+3. **Post-build**:
+   - .xpi integrity verification
+   - Checksum validation
+   - SBOM generation
+
+4. **Signing** (manual):
+   - Mozilla Add-ons API signing
+
+== Files
+
+[cols="1,3",options="header"]
+|===
+| File | Purpose
+
+| `Containerfile`
+| Multi-stage container build definition
+
+| `build.sh`
+| Orchestration script for complete build pipeline
+
+| `cerro-terro.yml`
+| Cerro-Terro configuration (if using cerro-terro)
+
+| `guix-manifest.scm`
+| Guix environment dependencies
+
+| `guix-channel.scm`
+| Guix channel definition for FireFlag
+
+| `README.adoc`
+| This file
+|===
+
+== Guix Integration
+
+=== Local Guix Environment
+
+To enter a development shell with all dependencies:
+
+[source,bash]
+----
+guix shell -m .containerization/guix-manifest.scm
+----
+
+This provides:
+
+* deno
+* idris2
+* zig
+* imagemagick
+* jq, gnupg, etc.
+
+=== Guix Package Build
+
+To build FireFlag as a Guix package:
+
+[source,bash]
+----
+guix build -f ../guix.scm
+----
+
+The package definition is in the repository root.
+
+== Reproducible Builds
+
+FireFlag follows https://reproducible-builds.org/[Reproducible Builds] principles:
+
+* **Deterministic toolchain**: Guix provides bit-for-bit reproducible builds
+* **Pinned dependencies**: All dependencies version-locked
+* **Source verification**: GPG signatures checked
+* **Build isolation**: Containers prevent environment contamination
+
+=== Verifying Reproducibility
+
+Two independent builders should produce identical .xpi files:
+
+[source,bash]
+----
+# Builder 1
+just container-build-full
+sha256sum build-output/web-ext-artifacts/*.xpi
+
+# Builder 2 (different machine)
+just container-build-full
+sha256sum build-output/web-ext-artifacts/*.xpi
+
+# Checksums should match!
+----
+
+== SLSA Provenance
+
+The build generates SLSA Level 3 provenance attestations:
+
+* **Source**: Git commit hash
+* **Builder**: Container image digest
+* **Materials**: All input files and dependencies
+* **Recipe**: Build steps executed
+
+Provenance is signed and attached to releases.
+
+== Security Features
+
+=== Chainguard Images
+
+FireFlag uses https://chainguard.dev/[Chainguard] minimal images:
+
+* **wolfi-base**: ~20MB, minimal attack surface
+* **static**: ~2MB, distroless runtime
+* CVE scanning built-in
+* Daily security updates
+
+=== Multi-Stage Isolation
+
+Build artifacts are extracted from the builder stage and copied to a minimal runtime image, ensuring:
+
+* No build tools in runtime image
+* No source code in runtime image
+* Minimal dependencies
+* Smaller attack surface
+
+=== Secrets Management
+
+Build secrets (Mozilla API keys) are:
+
+* Never baked into images
+* Passed at runtime via environment variables
+* Managed by CI/CD secrets vault
+* Never logged or exposed
+
+== Troubleshooting
+
+=== Guix daemon not running
+
+[source,bash]
+----
+# Start Guix daemon
+sudo systemctl start guix-daemon
+
+# Or manually
+sudo guix-daemon --build-users-group=guixbuild
+----
+
+=== Container build fails
+
+[source,bash]
+----
+# Clean everything
+just container-clean
+
+# Rebuild with verbose output
+podman build -f .containerization/Containerfile -t fireflag:latest . --log-level debug
+----
+
+=== Permission errors
+
+Ensure your user is in the correct groups:
+
+[source,bash]
+----
+# For Podman
+sudo usermod -aG podman $USER
+
+# For Docker
+sudo usermod -aG docker $USER
+
+# Re-login for changes to take effect
+----
+
+== CI/CD Integration
+
+=== GitHub Actions
+
+The `.github/workflows/` directory contains workflows that use this containerization:
+
+* `build.yml`: Automated builds on push
+* `release.yml`: Release builds with signing
+* `security.yml`: Security scanning
+
+=== GitLab CI
+
+Example `.gitlab-ci.yml`:
+
+[source,yaml]
+----
+build:
+  image: alpine:latest
+  script:
+    - apk add just podman
+    - just container-build-full
+  artifacts:
+    paths:
+      - build-output/
+----
+
+== Performance
+
+Build times on GitHub Actions (standard runner):
+
+* **Cold build**: ~8-10 minutes (Guix installation + dependencies)
+* **Warm build**: ~3-5 minutes (cached layers)
+* **Local build** (Guix pre-installed): ~2-3 minutes
+
+== Contributing
+
+When modifying the build system:
+
+1. Test locally: `just container-build-full`
+2. Verify reproducibility: Build twice, compare checksums
+3. Update this README if adding new features
+4. Run security scans: Svalin + Selur
+
+== License
+
+PMPL-1.0-or-later (Mozilla Public License 2.0 fallback)
+
+See `../LICENSE` for details.
