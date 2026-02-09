@@ -264,7 +264,16 @@ async function generateExport() {
   }
 
   if (includeMetrics) {
-    report.performanceMetrics = null; // TODO: Implement metrics collection
+    report.performanceMetrics = {
+      flagCount: Object.keys(states).length,
+      activeFlags: Object.keys(states).filter(k => states[k].value).length,
+      memoryUsage: performance.memory ? {
+        usedJSHeapSize: performance.memory.usedJSHeapSize,
+        totalJSHeapSize: performance.memory.totalJSHeapSize,
+        jsHeapSizeLimit: performance.memory.jsHeapSizeLimit
+      } : null,
+      collectedAt: new Date().toISOString()
+    };
   }
 
   let exportContent = '';

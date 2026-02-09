@@ -67,30 +67,29 @@ let collectPerformanceMetrics = async (): result<performanceMetrics, string> => 
     switch error {
     | Some(_) => Error("Failed to collect performance metrics")
     | None =>
-      let metrics: performanceMetrics = {
-        navigationStart: Js.Json.decodeNumber(
-          Js.Dict.unsafeGet(Js.Json.decodeObject(result)->Option.getExn, "navigationStart"),
-        )->Option.getExn,
-        domContentLoaded: Js.Json.decodeNumber(
-          Js.Dict.unsafeGet(Js.Json.decodeObject(result)->Option.getExn, "domContentLoaded"),
-        )->Option.getExn,
-        loadComplete: Js.Json.decodeNumber(
-          Js.Dict.unsafeGet(Js.Json.decodeObject(result)->Option.getExn, "loadComplete"),
-        )->Option.getExn,
-        firstPaint: Js.Json.decodeNumber(
-          Js.Dict.unsafeGet(Js.Json.decodeObject(result)->Option.getExn, "firstPaint"),
-        ),
-        firstContentfulPaint: Js.Json.decodeNumber(
-          Js.Dict.unsafeGet(Js.Json.decodeObject(result)->Option.getExn, "firstContentfulPaint"),
-        ),
-        memoryUsage: Js.Json.decodeNumber(
-          Js.Dict.unsafeGet(Js.Json.decodeObject(result)->Option.getExn, "memoryUsage"),
-        ),
-        jsHeapSize: Js.Json.decodeNumber(
-          Js.Dict.unsafeGet(Js.Json.decodeObject(result)->Option.getExn, "jsHeapSize"),
-        ),
+      switch Js.Json.decodeObject(result) {
+      | None => Error("Failed to decode metrics object")
+      | Some(dict) =>
+        let getNum = key =>
+          switch Js.Dict.get(dict, key) {
+          | Some(v) => Js.Json.decodeNumber(v)
+          | None => None
+          }
+        switch (getNum("navigationStart"), getNum("domContentLoaded"), getNum("loadComplete")) {
+        | (Some(navStart), Some(dcl), Some(load)) =>
+          let metrics: performanceMetrics = {
+            navigationStart: navStart,
+            domContentLoaded: dcl,
+            loadComplete: load,
+            firstPaint: getNum("firstPaint"),
+            firstContentfulPaint: getNum("firstContentfulPaint"),
+            memoryUsage: getNum("memoryUsage"),
+            jsHeapSize: getNum("jsHeapSize"),
+          }
+          Ok(metrics)
+        | _ => Error("Missing required metrics fields")
+        }
       }
-      Ok(metrics)
     }
   } catch {
   | exn => Error(Js.Exn.message(exn)->Option.getOr("Unknown error"))

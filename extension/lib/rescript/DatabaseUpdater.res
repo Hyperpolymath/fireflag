@@ -170,13 +170,146 @@ let autoUpdate = async (currentVersion: string, enableAutoUpdate: bool): result<
   }
 }
 
-// Parse flag database from JSON
-let parseFlagDatabase = (json: Js.Json.t): flagDatabase => {
-  // TODO: Implement full JSON parsing with validation
-  {
-    version: "1.0.0",
-    lastUpdated: Js.Date.now()->Js.Date.fromFloat->Js.Date.toISOString,
-    categories: Js.Dict.empty(),
-    flags: [],
+// Parse safety level string to variant
+let parseSafetyLevel = (s: string): safetyLevel =>
+  switch s {
+  | "safe" => Safe
+  | "dangerous" => Dangerous
+  | _ => Experimental
   }
-}
+
+// Parse value type string to variant
+let parseValueType = (s: string): flagValueType =>
+  switch s {
+  | "boolean" => Boolean
+  | "string" => String
+  | "integer" => Integer
+  | "float" => Float
+  | _ => Boolean
+  }
+
+// Parse category string to variant
+let parseCategory = (s: string): flagCategory =>
+  switch s {
+  | "privacy" => Privacy
+  | "performance" => Performance
+  | "experimental" => ExperimentalFeatures
+  | "developer" => Developer
+  | "ui" => UserInterface
+  | "network" => Network
+  | _ => ExperimentalFeatures
+  }
+
+// Parse permission string to variant
+let parsePermission = (s: string): option<browserPermission> =>
+  switch s {
+  | "browserSettings" => Some(BrowserSettings)
+  | "privacy" => Some(PrivacyPermission)
+  | "tabs" => Some(Tabs)
+  | "notifications" => Some(Notifications)
+  | "downloads" => Some(Downloads)
+  | _ => None
+  }
+
+// Safely extract a string from a JSON dict
+let getString = (dict: Js.Dict.t<Js.Json.t>, key: string): option<string> =>
+  Js.Dict.get(dict, key)->Option.flatMap(Js.Json.decodeString)
+
+// Safely extract an optional string
+let getOptString = (dict: Js.Dict.t<Js.Json.t>, key: string): option<string> =>
+  Js.Dict.get(dict, key)->Option.flatMap(v =>
+    switch Js.Json.classify(v) {
+    | Js.Json.JSONNull => None
+    | _ => Js.Json.decodeString(v)
+    }
+  )
+
+// Safely extract an optional int
+let getOptInt = (dict: Js.Dict.t<Js.Json.t>, key: string): option<int> =>
+  Js.Dict.get(dict, key)->Option.flatMap(Js.Json.decodeNumber)->Option.map(Float.toInt)
+
+// Safely extract a string array
+let getStringArray = (dict: Js.Dict.t<Js.Json.t>, key: string): array<string> =>
+  Js.Dict.get(dict, key)
+  ->Option.flatMap(Js.Json.decodeArray)
+  ->Option.map(arr => arr->Array.filterMap(Js.Json.decodeString))
+  ->Option.getOr([])
+
+// Parse a single flag from JSON
+let parseFlag = (json: Js.Json.t): option<flag> =>
+  switch Js.Json.decodeObject(json) {
+  | None => None
+  | Some(obj) =>
+    switch (getString(obj, "key"), getString(obj, "description")) {
+    | (Some(key), Some(description)) =>
+      let effectsObj =
+        Js.Dict.get(obj, "effects")
+        ->Option.flatMap(Js.Json.decodeObject)
+        ->Option.getOr(Js.Dict.empty())
+
+      let permStrings = getStringArray(obj, "permissions")
+
+      Some({
+        key,
+        valueType: getString(obj, "type")->Option.map(parseValueType)->Option.getOr(Boolean),
+        category: getString(obj, "category")->Option.map(parseCategory)->Option.getOr(ExperimentalFeatures),
+        safetyLevel: getString(obj, "safetyLevel")->Option.map(parseSafetyLevel)->Option.getOr(Experimental),
+        defaultValue: Js.Dict.get(obj, "defaultValue")->Option.getOr(Js.Json.boolean(false)),
+        description,
+        effects: {
+          positive: getStringArray(effectsObj, "positive"),
+          negative: getStringArray(effectsObj, "negative"),
+          interesting: getStringArray(effectsObj, "interesting"),
+        },
+        permissions: permStrings->Array.filterMap(parsePermission),
+        geckoMinVersion: getOptString(obj, "geckoMinVersion"),
+        geckoMaxVersion: getOptString(obj, "geckoMaxVersion"),
+        documentation: getOptString(obj, "documentation"),
+        bugNumber: getOptInt(obj, "bugNumber"),
+      })
+    | _ => None
+    }
+  }
+
+// Parse flag database from JSON with full validation
+let parseFlagDatabase = (json: Js.Json.t): flagDatabase =>
+  switch Js.Json.decodeObject(json) {
+  | None => {
+      version: "0.0.0",
+      lastUpdated: Js.Date.now()->Js.Date.fromFloat->Js.Date.toISOString,
+      categories: Js.Dict.empty(),
+      flags: [],
+    }
+  | Some(obj) =>
+    let version = getString(obj, "version")->Option.getOr("0.0.0")
+    let lastUpdated =
+      getString(obj, "lastUpdated")->Option.getOr(
+        Js.Date.now()->Js.Date.fromFloat->Js.Date.toISOString,
+      )
+
+    let categories = switch Js.Dict.get(obj, "categories")->Option.flatMap(Js.Json.decodeObject) {
+    | None => Js.Dict.empty()
+    | Some(catsObj) =>
+      let result: Js.Dict.t<categoryMeta> = Js.Dict.empty()
+      Js.Dict.keys(catsObj)->Array.forEach(catKey => {
+        switch Js.Dict.get(catsObj, catKey)->Option.flatMap(Js.Json.decodeObject) {
+        | Some(catObj) =>
+          switch (getString(catObj, "name"), getString(catObj, "description")) {
+          | (Some(name), Some(description)) =>
+            Js.Dict.set(result, catKey, {name, description})
+          | _ => ()
+          }
+        | None => ()
+        }
+      })
+      result
+    }
+
+    let flags =
+      Js.Dict.get(obj, "flags")
+      ->Option.flatMap(Js.Json.decodeArray)
+      ->Option.map(arr => arr->Array.filterMap(parseFlag))
+      ->Option.getOr([])
+
+    {version, lastUpdated, categories, flags}
+  }

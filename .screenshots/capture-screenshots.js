@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --allow-all
+#!/usr/bin/env -S deno run --allow-read --allow-write --allow-net --allow-run --allow-env
 // SPDX-License-Identifier: PMPL-1.0-or-later
 // Automated screenshot capture for FireFlag extension
 

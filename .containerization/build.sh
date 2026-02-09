@@ -77,9 +77,10 @@ fi
 # Stage 4: Post-build validation
 run_stage "post-build-validation" "Validating built extension"
 
-if [ -f "$PROJECT_ROOT/build-output/web-ext-artifacts"/*.xpi ]; then
+XPI_FILE=$(find "$PROJECT_ROOT/build-output/web-ext-artifacts" -maxdepth 1 -name '*.xpi' -print -quit 2>/dev/null)
+if [ -n "$XPI_FILE" ] && [ -f "$XPI_FILE" ]; then
     echo "Checking .xpi integrity..."
-    unzip -t "$PROJECT_ROOT/build-output/web-ext-artifacts"/*.xpi > /dev/null
+    unzip -t "$XPI_FILE" > /dev/null
     echo "  ✓ .xpi file is valid"
 
     echo "Verifying checksums..."

@@ -213,10 +213,12 @@ function analyzeImpact(before, after) {
 
 // Inspect specific flag
 async function inspectFlag(key) {
+  // Sanitize key to prevent code injection via string interpolation
+  const sanitizedKey = key.replace(/[\\"'`$]/g, '');
   const code = `
     (function() {
       // Check if flag affects this page
-      const flagKey = "${key}";
+      const flagKey = ${JSON.stringify(sanitizedKey)};
       console.log("Inspecting flag:", flagKey);
 
       // Return any relevant page state
@@ -229,7 +231,7 @@ async function inspectFlag(key) {
   `;
 
   const [result] = await browser.devtools.inspectedWindow.eval(code);
-  logToConsole(`Inspected flag: ${key} on ${result.url}`, 'info');
+  logToConsole(`Inspected flag: ${escapeHtml(key)} on ${result.url}`, 'info');
 }
 
 // Export DevTools data
