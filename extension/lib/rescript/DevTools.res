@@ -92,7 +92,8 @@ let collectPerformanceMetrics = async (): result<performanceMetrics, string> => 
       }
     }
   } catch {
-  | exn => Error(Js.Exn.message(exn)->Option.getOr("Unknown error"))
+  | JsExn(exn) => Error(JsExn.message(exn)->Option.getOr("Unknown error"))
+  | _ => Error("Unknown error")
   }
 }
 
@@ -142,7 +143,8 @@ let createDevToolsPanel = async (): result<DevToolsAPI.panel, string> => {
     )
     Ok(panel)
   } catch {
-  | exn => Error(Js.Exn.message(exn)->Option.getOr("Failed to create DevTools panel"))
+  | JsExn(exn) => Error(JsExn.message(exn)->Option.getOr("Failed to create DevTools panel"))
+  | _ => Error("Failed to create DevTools panel")
   }
 }
 
@@ -155,10 +157,10 @@ let exportMetricsReport = (state: panelState): developerReport => {
     flagChanges: [],
     performanceMetrics: switch state.metrics {
     | Some(m) => {
-        let dict = Js.Dict.empty()
-        Js.Dict.set(dict, "navigationStart", Js.Json.number(m.navigationStart))
-        Js.Dict.set(dict, "domContentLoaded", Js.Json.number(m.domContentLoaded))
-        Js.Dict.set(dict, "loadComplete", Js.Json.number(m.loadComplete))
+        let dict: Js.Dict.t<float> = Js.Dict.empty()
+        Js.Dict.set(dict, "navigationStart", m.navigationStart)
+        Js.Dict.set(dict, "domContentLoaded", m.domContentLoaded)
+        Js.Dict.set(dict, "loadComplete", m.loadComplete)
         Some(dict)
       }
     | None => None
