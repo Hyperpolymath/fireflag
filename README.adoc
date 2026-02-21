@@ -408,3 +408,8 @@ Inspired by the need for safer about:config management in Firefox and Gecko-base
 ---
 
 **FireFlag** - Safe Firefox flag management for everyone.
+
+
+== Architecture
+
+See link:TOPOLOGY.md[TOPOLOGY.md] for a visual architecture map and completion dashboard.
